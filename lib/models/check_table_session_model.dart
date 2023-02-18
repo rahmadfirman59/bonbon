@@ -51,9 +51,9 @@ class CheckTableSessionModel {
   dynamic rounding;
   int? discount;
   int? charge;
-  int? tax;
+  dynamic tax;
   dynamic refund;
-  int? netTotal;
+  dynamic netTotal;
   dynamic paymentAmount;
   dynamic paymentChange;
   dynamic paymentMethod;

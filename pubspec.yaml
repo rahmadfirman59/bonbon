@@ -48,6 +48,8 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   flutter_easyloading: ^3.0.3
   loading_animations: ^2.2.0
+  intl: ^0.17.0
+  lottie:
   
   
   

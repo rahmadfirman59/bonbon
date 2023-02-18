@@ -16,12 +16,14 @@ class AuthController extends GetxController {
   void onInit() {
     debugPrint('token-->${getToken()}');
     super.onInit();
+    loginBinding();
   }
 
   loginBinding() async {
     if (getToken() == null) {
       Get.offAllNamed(RouteName.login);
     } else {
+      print("Masuk sini");
       // fetch api
       GlobalHelper.easyLoading();
       await fetchingMe(box.read("token"))
@@ -31,6 +33,11 @@ class AuthController extends GetxController {
 
   Future<void> fetchingMe(String token) async {
     var respondMe = await RestServices.fetchMe(token);
+    if (respondMe?.session == "pending_open") {
+      Get.offAllNamed(RouteName.waiting_page);
+    } else {
+      Get.toNamed(RouteName.index);
+    }
     meModel.value = respondMe;
   }
 }

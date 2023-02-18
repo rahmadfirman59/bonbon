@@ -214,11 +214,11 @@ class _ScanState extends State<Scan> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: TextFormField(
-              // controller: scanController.tableCodeController,
+              controller: scanController.tableCodeController,
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.black,
-                fontFamily: ('SanFransisco'),
+                fontFamily: BaseTheme.font_family_sf,
               ),
               onChanged: (value) {},
               decoration: InputDecoration(
@@ -247,10 +247,8 @@ class _ScanState extends State<Scan> {
             text: "LOGIN",
             isValid: true,
             onPressed: () {
-              // loginController.phoneNumber.value.length <= 10
-              //     ? null
-              //     : loginController
-              //         .otpLogin(loginController.phoneNumber.trim());
+              scanController
+                  .tableCheck(scanController.tableCodeController.text.trim());
             },
             fontSize: 16.sp,
           ),

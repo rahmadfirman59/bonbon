@@ -7,9 +7,11 @@ import 'package:bonbon_new/ui/auth/login.dart';
 import 'package:bonbon_new/ui/auth/otp.dart';
 import 'package:bonbon_new/ui/home/home.dart';
 import 'package:bonbon_new/ui/inbox/inbox.dart';
+import 'package:bonbon_new/ui/index.dart';
 import 'package:bonbon_new/ui/scan/scan.dart';
 import 'package:bonbon_new/ui/session/choose_session.dart';
 import 'package:bonbon_new/ui/session/create_session.dart';
+import 'package:bonbon_new/ui/session/wating_page.dart';
 import 'package:get/get.dart';
 
 import 'routes_name.dart';
@@ -55,6 +57,14 @@ class AppRoute {
     GetPage(
       name: RouteName.choose_session,
       page: () => ChooseSession(),
+    ),
+    GetPage(
+      name: RouteName.waiting_page,
+      page: () => WaitingPage(),
+    ),
+    GetPage(
+      name: RouteName.index,
+      page: () => Index(),
     ),
   ];
 }

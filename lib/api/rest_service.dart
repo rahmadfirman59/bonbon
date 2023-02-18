@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:bonbon_new/models/check_table_model.dart';
 import 'package:bonbon_new/models/check_table_session_model.dart';
+import 'package:bonbon_new/models/create_session_model.dart';
 import 'package:bonbon_new/models/login_model.dart';
 import 'package:bonbon_new/models/me_model.dart';
 import 'package:bonbon_new/models/nearby_restaurant_model.dart';
@@ -216,6 +217,34 @@ class RestServices {
       var str = json.encode(response.data);
       debugPrint('Table Model : ${str.toString()}');
       return tableModelFromJson(str);
+    }
+  }
+
+  static Future<CreateSessionModel?> createSession(
+      String? token, Map<String, dynamic> body) async {
+    Map<String, dynamic> headers = {
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token!
+    };
+    var response = await client.post(
+      baseUrl + pwa + 'session',
+      data: body,
+      options: Options(
+        headers: headers,
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      var str = json.encode(response.data);
+      debugPrint('Create Session : ${str.toString()}');
+      return createSessionModelFromJson(str);
+    } else {
+      var str = json.encode(response.data);
+      debugPrint('Create Session Model : ${response.toString()}');
+      return createSessionModelFromJson(str);
     }
   }
 }
