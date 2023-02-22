@@ -28,6 +28,7 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
     readJson();
     mySelection.value = "62";
   }

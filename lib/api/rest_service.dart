@@ -2,13 +2,17 @@
 
 import 'dart:convert';
 
+import 'package:bonbon_new/models/cart_item_mode.dart';
 import 'package:bonbon_new/models/check_table_model.dart';
 import 'package:bonbon_new/models/check_table_session_model.dart';
 import 'package:bonbon_new/models/create_session_model.dart';
 import 'package:bonbon_new/models/login_model.dart';
+import 'package:bonbon_new/models/me_include_items_model.dart';
 import 'package:bonbon_new/models/me_model.dart';
+import 'package:bonbon_new/models/menu_lite_model.dart';
 import 'package:bonbon_new/models/nearby_restaurant_model.dart';
 import 'package:bonbon_new/models/popular_restaurant_model.dart';
+import 'package:bonbon_new/models/session_summary_model.dart';
 import 'package:bonbon_new/models/table_model.dart';
 
 import 'package:dio/dio.dart';
@@ -93,6 +97,32 @@ class RestServices {
       var str = json.encode(response.data);
       debugPrint('Md Model : ${str.toString()}');
       return meModelFromJson(str);
+    }
+  }
+
+  static Future<MeIncludeItemModels?> fetchMeIncludeItem(String? token) async {
+    Map<String, dynamic> headers = {
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token!
+    };
+    var response = await client.get(
+      baseUrl + pwa + 'order/me?include=items',
+      options: Options(
+        headers: headers,
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      var str = json.encode(response.data);
+      debugPrint('Me Model : ${str.toString()}');
+      return meIncludeItemModelsFromJson(str);
+    } else {
+      var str = json.encode(response.data);
+      debugPrint('Md Model : ${str.toString()}');
+      return meIncludeItemModelsFromJson(str);
     }
   }
 
@@ -245,6 +275,117 @@ class RestServices {
       var str = json.encode(response.data);
       debugPrint('Create Session Model : ${response.toString()}');
       return createSessionModelFromJson(str);
+    }
+  }
+
+  static Future<MenuLiteModels?> fetchOutletMenuLite(
+      String? token, String? outletId) async {
+    Map<String, dynamic> headers = {
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token!
+    };
+    var response = await client.get(
+      baseUrl + pwa + 'outlet/' + outletId! + "/menu-lite",
+      options: Options(
+        headers: headers,
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      var str = json.encode(response.data);
+      debugPrint('Menu Lite Model : ${str.toString()}');
+      return menuLiteModelsFromJson(str);
+    } else {
+      var str = json.encode(response.data);
+      debugPrint('Menu Lite Model: ${str.toString()}');
+      return menuLiteModelsFromJson(str);
+    }
+  }
+
+  static Future<CartItemModels?> fetchCartItem(String? token) async {
+    Map<String, dynamic> headers = {
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token!
+    };
+    var response = await client.get(
+      baseUrl +
+          pwa +
+          'cart-items?include=items,items.item,user,items.modifiers,items.members',
+      options: Options(
+        headers: headers,
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      var str = json.encode(response.data);
+      debugPrint('Cart Item Model : ${str.toString()}');
+      return cartItemModelsFromJson(str);
+    } else {
+      var str = json.encode(response.data);
+      debugPrint('Cart ItemModel: ${str.toString()}');
+      return cartItemModelsFromJson(str);
+    }
+  }
+
+  static Future<SessionSummaryModel?> fetchSessionSummary(String? token) async {
+    Map<String, dynamic> headers = {
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token!
+    };
+    var response = await client.get(
+      baseUrl +
+          pwa +
+          'session/summary?include=members.user,orders.item,orders.members,table,outlet&type=active',
+      options: Options(
+        headers: headers,
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      var str = json.encode(response.data);
+      debugPrint('Session Summary Model : ${str.toString()}');
+      return sessionSummaryModelFromJson(str);
+    } else {
+      var str = json.encode(response.data);
+      debugPrint('Session Summary Model: ${str.toString()}');
+      return sessionSummaryModelFromJson(str);
+    }
+  }
+
+  static Future<bool?> addToCart(
+      String? token, Map<String, dynamic> body) async {
+    Map<String, dynamic> headers = {
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token!
+    };
+    var response = await client.post(
+      baseUrl + pwa + 'cart-items',
+      data: body,
+      options: Options(
+        headers: headers,
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      // var str = json.encode(response.data);
+      debugPrint('Add to cart success:');
+      return true;
+    } else {
+      // var str = json.encode(response.data);
+      debugPrint('Add to cart fail  ${response.toString()}');
+      return false;
     }
   }
 }

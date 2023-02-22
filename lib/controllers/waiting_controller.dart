@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:async';
 
 import 'package:bonbon_new/api/rest_service.dart';
@@ -32,6 +34,8 @@ class WaitingController extends GetxController {
 
     if (meModel.value?.session == "completed") {
       Get.offAllNamed(RouteName.home);
+    } else if (meModel.value?.session == "active") {
+      Get.offAllNamed(RouteName.in_session);
     }
   }
 

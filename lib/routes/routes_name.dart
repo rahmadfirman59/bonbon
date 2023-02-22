@@ -13,4 +13,7 @@ abstract class RouteName {
   static const create_session = '/create_session';
   static const choose_session = '/choose_session';
   static const waiting_page = '/waiting_page';
+  static const restaurant = '/restaurant';
+  static const in_session = '/in_session';
+  static const session_share_qr = '/session_share_qr';
 }

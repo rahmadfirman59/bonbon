@@ -16,6 +16,8 @@ class CreateAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     CreateAccountController createAccountController =
         Get.put(CreateAccountController());
+    FocusNode myFocusNode = FocusNode();
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -46,6 +48,7 @@ class CreateAccount extends StatelessWidget {
                   width: 328.w,
                   height: 56.h,
                   child: TextField(
+                    focusNode: myFocusNode,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: "Full name",
@@ -139,7 +142,7 @@ class CreateAccount extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black45,
-                          fontFamily: ('SanFransisco'),
+                          fontFamily: BaseTheme.font_family_sf,
                         )),
                   ],
                 ),
@@ -163,7 +166,7 @@ class CreateAccount extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black45,
-                          fontFamily: ('SanFransisco'),
+                          fontFamily: BaseTheme.font_family_sf,
                         )),
                     SizedBox(
                       width: 30,
@@ -183,7 +186,7 @@ class CreateAccount extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black45,
-                        fontFamily: ('SanFransisco'),
+                        fontFamily: BaseTheme.font_family_sf,
                       ),
                     ),
                   ],
