@@ -17,6 +17,7 @@ class BaseTheme {
   static Color color_grey_8 = Color(0xFF595959);
   static Color color_grey_9 = Color(0xFF262626);
   static Color color_grey_7 = Color(0xFF8C8C8C);
+  static Color color_blue_1 = Color(0xFF5A8EE0);
   static Color mutedColor = Color(0xFF999999);
   static const Color bg_color = Color(0xFFEFEFEF);
   static const double font_size = 15;

@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:bonbon_new/api/rest_service.dart';
-import 'package:bonbon_new/models/cart_item_mode.dart';
+import 'package:bonbon_new/models/cart_item_model.dart';
 import 'package:bonbon_new/models/me_include_items_model.dart';
 import 'package:bonbon_new/models/me_model.dart';
 import 'package:bonbon_new/models/menu_lite_model.dart';

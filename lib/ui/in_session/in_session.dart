@@ -6,7 +6,7 @@ import 'package:bonbon_new/routes/routes_name.dart';
 import 'package:bonbon_new/theme.dart';
 import 'package:bonbon_new/ui/in_session/widgets/session_categories.dart';
 import 'package:bonbon_new/ui/in_session/widgets/session_menu.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,7 +17,7 @@ class InSession extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inSessionController = Get.put(InSessionController());
-    final mediaQueryHeight = MediaQuery.of(context).size.height;
+    // final mediaQueryHeight = MediaQuery.of(context).size.height;
 
     final myAppBar = AppBar(
       backgroundColor: Colors.transparent,
@@ -39,9 +39,19 @@ class InSession extends StatelessWidget {
                 fontWeight: FontWeight.w800),
           )),
       actions: [
-        Padding(
-          padding: EdgeInsets.all(8),
-          child: Icon(
+        // Padding(
+        //   padding: EdgeInsets.all(8),
+        //   child: IconButton(
+
+        //     Icons.shopping_bag,
+        //     color: Colors.white,
+        //   ),
+        // )
+        IconButton(
+          onPressed: () {
+            Get.toNamed(RouteName.cart_item);
+          },
+          icon: Icon(
             Icons.shopping_bag,
             color: Colors.white,
           ),
@@ -61,74 +71,71 @@ class InSession extends StatelessWidget {
                 image: AssetImage("assets/outlets/outlet.png"),
                 fit: BoxFit.cover,
               ),
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50)),
             ),
           ),
           Scaffold(
             backgroundColor: Colors.transparent,
             appBar: myAppBar,
-            body: Container(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 122.h - MediaQuery.of(context).padding.top,
+            body: Column(
+              children: [
+                SizedBox(
+                  height: 122.h - MediaQuery.of(context).padding.top,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Obx(() => Text(
+                            "Table ${inSessionController.sessionSummaryModel.value?.table?.name}",
+                            style: TextStyle(
+                                fontSize: 16.sp,
+                                fontFamily: BaseTheme.font_family_open,
+                                fontWeight: FontWeight.w800),
+                          )),
+                      Obx(() => Text(
+                            "${inSessionController.sessionSummaryModel.value?.members?.length}/${inSessionController.sessionSummaryModel.value?.table?.pax} Pax",
+                            style: TextStyle(
+                                fontSize: 16.sp,
+                                fontFamily: BaseTheme.font_family_open,
+                                fontWeight: FontWeight.w800),
+                          )),
+                    ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Obx(() => Text(
-                              "Table ${inSessionController.sessionSummaryModel.value?.table?.name}",
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontFamily: BaseTheme.font_family_open,
-                                  fontWeight: FontWeight.w800),
-                            )),
-                        Obx(() => Text(
-                              "${inSessionController.sessionSummaryModel.value?.members?.length}/${inSessionController.sessionSummaryModel.value?.table?.pax} Pax",
-                              style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontFamily: BaseTheme.font_family_open,
-                                  fontWeight: FontWeight.w800),
-                            )),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "${inSessionController.sessionSummaryModel.value?.members?[0].user?.name}",
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${inSessionController.sessionSummaryModel.value?.members?[0].user?.name}",
+                        style: TextStyle(
+                            fontSize: 12.sp,
+                            fontFamily: BaseTheme.font_family_sf,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Obx(
+                        () => Text(
+                          "Start ${GlobalHelper.timeFormat.format(inSessionController.sessionSummaryModel.value?.createdAt ?? DateTime.now())}",
                           style: TextStyle(
                               fontSize: 12.sp,
                               fontFamily: BaseTheme.font_family_sf,
                               fontWeight: FontWeight.w400),
                         ),
-                        Obx(
-                          () => Text(
-                            "Start ${GlobalHelper.timeFormat.format(inSessionController.sessionSummaryModel.value?.createdAt ?? DateTime.now())}",
-                            style: TextStyle(
-                                fontSize: 12.sp,
-                                fontFamily: BaseTheme.font_family_sf,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  SessionCategories(inSessionController: inSessionController),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  SessionMenu(inSessionController: inSessionController)
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                SessionCategories(inSessionController: inSessionController),
+                SizedBox(
+                  height: 16,
+                ),
+                SessionMenu(inSessionController: inSessionController)
+              ],
             ),
             bottomNavigationBar: BottomNavigationBar(
               onTap: (index) async {
@@ -137,14 +144,10 @@ class InSession extends StatelessWidget {
                     Get.toNamed(RouteName.session_share_qr);
                     break;
                   case 1:
-                    print("2");
                     break;
                   case 2:
-                    // Get.toNamed(RouteName.inbox);
-                    print('3');
                     break;
                   case 3:
-                    print('4');
                     break;
                 }
                 // indexController.currentIndex.value = index;

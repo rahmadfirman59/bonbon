@@ -48,7 +48,7 @@ class PrimaryButton extends StatelessWidget {
             style: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              fontFamily: ('SanFransisco'),
+              fontFamily: BaseTheme.font_family_sf,
             ),
           ),
         ),

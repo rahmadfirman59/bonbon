@@ -66,7 +66,7 @@ class ItemElement {
   });
 
   ItemItem? item;
-  List<dynamic>? modifiers;
+  List<Modifier>? modifiers;
   List<Member>? members;
   String? id;
   int? qty;
@@ -81,7 +81,8 @@ class ItemElement {
         item: json["item"] == null ? null : ItemItem.fromJson(json["item"]),
         modifiers: json["modifiers"] == null
             ? []
-            : List<dynamic>.from(json["modifiers"]!.map((x) => x)),
+            : List<Modifier>.from(
+                json["modifiers"]!.map((x) => Modifier.fromJson(x))),
         members: json["members"] == null
             ? []
             : List<Member>.from(
@@ -104,7 +105,7 @@ class ItemElement {
         "item": item?.toJson(),
         "modifiers": modifiers == null
             ? []
-            : List<dynamic>.from(modifiers!.map((x) => x)),
+            : List<dynamic>.from(modifiers!.map((x) => x.toJson())),
         "members": members == null
             ? []
             : List<dynamic>.from(members!.map((x) => x.toJson())),
@@ -121,6 +122,8 @@ class ItemElement {
 
 class ItemItem {
   ItemItem({
+    this.images,
+    this.modifiers,
     this.id,
     this.name,
     this.sku,
@@ -131,6 +134,8 @@ class ItemItem {
     this.fullName,
   });
 
+  List<Image>? images;
+  List<Modifier>? modifiers;
   String? id;
   String? name;
   String? sku;
@@ -141,6 +146,13 @@ class ItemItem {
   String? fullName;
 
   factory ItemItem.fromJson(Map<String, dynamic> json) => ItemItem(
+        images: json["images"] == null
+            ? []
+            : List<Image>.from(json["images"]!.map((x) => Image.fromJson(x))),
+        modifiers: json["modifiers"] == null
+            ? []
+            : List<Modifier>.from(
+                json["modifiers"]!.map((x) => Modifier.fromJson(x))),
         id: json["id"],
         name: json["name"],
         sku: json["sku"],
@@ -156,6 +168,12 @@ class ItemItem {
       );
 
   Map<String, dynamic> toJson() => {
+        "images": images == null
+            ? []
+            : List<dynamic>.from(images!.map((x) => x.toJson())),
+        "modifiers": modifiers == null
+            ? []
+            : List<dynamic>.from(modifiers!.map((x) => x.toJson())),
         "id": id,
         "name": name,
         "sku": sku,
@@ -164,6 +182,94 @@ class ItemItem {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "fullName": fullName,
+      };
+}
+
+class Image {
+  Image({
+    this.id,
+    this.original,
+    this.thumb,
+    this.type,
+  });
+
+  String? id;
+  String? original;
+  String? thumb;
+  String? type;
+
+  factory Image.fromJson(Map<String, dynamic> json) => Image(
+        id: json["id"],
+        original: json["original"],
+        thumb: json["thumb"],
+        type: json["type"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "original": original,
+        "thumb": thumb,
+        "type": type,
+      };
+}
+
+class Modifier {
+  Modifier({
+    this.master,
+    this.id,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  Master? master;
+  String? id;
+  String? status;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+
+  factory Modifier.fromJson(Map<String, dynamic> json) => Modifier(
+        master: json["master"] == null ? null : Master.fromJson(json["master"]),
+        id: json["id"],
+        status: json["status"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "master": master?.toJson(),
+        "id": id,
+        "status": status,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+      };
+}
+
+class Master {
+  Master({
+    this.id,
+    this.name,
+    this.price,
+  });
+
+  String? id;
+  String? name;
+  int? price;
+
+  factory Master.fromJson(Map<String, dynamic> json) => Master(
+        id: json["id"],
+        name: json["name"],
+        price: json["price"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "price": price,
       };
 }
 

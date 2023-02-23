@@ -1,7 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:bonbon_new/controllers/in_session_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:get/get.dart';
 
 class SessionCategories extends StatelessWidget {

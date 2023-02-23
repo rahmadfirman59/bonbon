@@ -3,20 +3,26 @@
 import 'dart:async';
 
 import 'package:bonbon_new/api/rest_service.dart';
-import 'package:bonbon_new/models/cart_item_mode.dart';
+import 'package:bonbon_new/models/cart_item_model.dart';
 import 'package:bonbon_new/models/me_include_items_model.dart';
 import 'package:bonbon_new/models/me_model.dart';
 import 'package:bonbon_new/models/menu_lite_model.dart';
 import 'package:bonbon_new/models/session_summary_model.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class InSessionController extends GetxController {
+  TextEditingController notesController = TextEditingController();
   Rx<MeModel?> meModel = MeModel().obs;
   Rx<MeIncludeItemModels?> meIncludeItemModels = MeIncludeItemModels().obs;
   Rx<MenuLiteModels?> menuLiteModels = MenuLiteModels().obs;
   Rx<CartItemModels?> cartItemModels = CartItemModels().obs;
   Rx<SessionSummaryModel?> sessionSummaryModel = SessionSummaryModel().obs;
+  List<dynamic> menuElement = [].obs;
+  var status = ["Only Me", "Group", "Shared With"].obs;
+  var statusSet = "Only Me".obs;
+  var count = 0.obs;
 
   var box = GetStorage();
   Timer? timer;
@@ -32,6 +38,18 @@ class InSessionController extends GetxController {
   void onClose() {
     super.onClose();
     timer?.cancel();
+  }
+
+  void increment() {
+    count++;
+    // personController.value?.text = count.value.toString();
+  }
+
+  void decrement() {
+    if (count != 0) {
+      count--;
+    }
+    // personController.value?.text = count.value.toString();
   }
 
   Future<void> fetchingMeIncludeItems(String token) async {
@@ -61,6 +79,17 @@ class InSessionController extends GetxController {
         box.read("token"), meIncludeItemModels.value?.outlet?.id);
     menuLiteModels.value = responseMenuLite;
 
+    var item = menuLiteModels.value;
+
+    for (var asd in item!.menus!) {
+      Map<String, dynamic> body = {
+        "id": asd.id,
+        "name": asd.fullName,
+        "group": asd.categories?[0].master?.name,
+      };
+      menuElement.add(body);
+    }
+
     print("Menu Lite Models ${meIncludeItemModels.toString()}");
   }
 
@@ -77,6 +106,25 @@ class InSessionController extends GetxController {
     sessionSummaryModel.value = responseSessionSummary;
 
     print("Session Summary Models ${sessionSummaryModel.toString()}");
+  }
+
+  Future<void> addToCart(bool? group, String? member, String? menuId,
+      String? notes, int? qty) async {
+    Map<String, dynamic> body = {
+      "group": group,
+      "members": [member],
+      "menu_id": menuId,
+      "modifiers": [],
+      "note": notes,
+      "qty": qty,
+    };
+    var responseAddTocart =
+        await RestServices.addToCart(box.read("token"), body);
+    // var responseSessionSummary =
+    //     await RestServices.fetchSessionSummary(box.read("token"));
+    // sessionSummaryModel.value = responseSessionSummary;
+
+    print("Add to cart ${responseAddTocart.toString()}");
   }
 
   void timerDispose() {

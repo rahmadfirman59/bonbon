@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:bonbon_new/models/cart_item_mode.dart';
+import 'package:bonbon_new/models/cart_item_model.dart';
 import 'package:bonbon_new/models/check_table_model.dart';
 import 'package:bonbon_new/models/check_table_session_model.dart';
 import 'package:bonbon_new/models/create_session_model.dart';

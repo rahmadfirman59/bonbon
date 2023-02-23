@@ -5,8 +5,10 @@ import 'package:bonbon_new/ui/auth/create_account.dart';
 import 'package:bonbon_new/ui/auth/create_account_success.dart';
 import 'package:bonbon_new/ui/auth/login.dart';
 import 'package:bonbon_new/ui/auth/otp.dart';
+import 'package:bonbon_new/ui/cart/cart.dart';
 import 'package:bonbon_new/ui/home/home.dart';
 import 'package:bonbon_new/ui/in_session/in_session.dart';
+import 'package:bonbon_new/ui/in_session/session_pickfood.dart';
 import 'package:bonbon_new/ui/in_session/session_share_qr.dart';
 import 'package:bonbon_new/ui/inbox/inbox.dart';
 import 'package:bonbon_new/ui/index.dart';
@@ -80,6 +82,14 @@ class AppRoute {
     GetPage(
       name: RouteName.session_share_qr,
       page: () => SessionShareQr(),
+    ),
+    GetPage(
+      name: RouteName.session_pickfood,
+      page: () => SessionPickFood(),
+    ),
+    GetPage(
+      name: RouteName.cart_item,
+      page: () => CartItem(),
     ),
   ];
 }
