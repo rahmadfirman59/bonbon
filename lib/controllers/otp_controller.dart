@@ -2,6 +2,9 @@
 
 import 'dart:async';
 
+import 'package:bonbon_new/api/base/base_response.dart';
+import 'package:bonbon_new/api/const/api_endpoint.dart';
+import 'package:bonbon_new/api/const/sim_error.dart';
 import 'package:bonbon_new/api/rest_service.dart';
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/models/login_model.dart';
@@ -25,8 +28,7 @@ class OtpController extends GetxController {
   var otpfield = "".obs;
   Timer? timer;
 
-  Rx<LoginModel?> loginModel = LoginModel().obs;
-  Rx<MeModel?> meModel = MeModel().obs;
+  var meModel = MeModel().obs;
 
   @override
   void onInit() {
@@ -61,47 +63,101 @@ class OtpController extends GetxController {
   resendOtp(String? phoneNumber) async {
     GlobalHelper.easyLoading();
 
-    Map<String, dynamic> body = {
+    Map<String, dynamic> data = {
       "phone": phoneNumber,
     };
     seconds.value = maxSecond;
-    var response = await RestServices.loginOtp(body);
+    // var response = await RestServices.loginOtp(body);
 
-    if (response == true) {
-      EasyLoading.dismiss();
-      EasyLoading.showSuccess("OTP Send");
-    } else {
-      EasyLoading.dismiss();
-      EasyLoading.showError("Error " + response.toString());
-    }
+    // if (response == true) {
+    //   EasyLoading.dismiss();
+    //   EasyLoading.showSuccess("OTP Send");
+    // } else {
+    //   EasyLoading.dismiss();
+    //   EasyLoading.showError("Error " + response.toString());
+    // }
+    await BaseResponse()
+        .postData(
+      path: ApiEndpoint.REQUEST_OTP,
+      data: data,
+    )
+        .then(
+      (res) {
+        if (res == true) {
+          EasyLoading.dismiss();
+          EasyLoading.showSuccess("OTP Send");
+        }
+      },
+    );
     starTimer();
   }
 
   Future<void> login(String? phoneNumber, String? otp) async {
-    Map<String, dynamic> body = {"phone": phoneNumber ?? "", "otp": otp ?? ""};
+    GlobalHelper.easyLoading();
+    Map<String, dynamic> data = {"phone": phoneNumber ?? "", "otp": otp ?? ""};
 
-    var response = await RestServices.login(body);
+    await BaseResponse<LoginModel>()
+        .postData(
+      path: ApiEndpoint.OTP_LOGIN,
+      data: data,
+      fromJson: loginModelFromJson,
+    )
+        .then(
+      (res) {
+        LoginModel response = res;
+        if (response.accessToken != null) {
+          EasyLoading.dismiss();
+          EasyLoading.showSuccess("OTP Valid");
+          box.write('token', response.accessToken);
+          fetchingMe(box.read("token"));
+          Get.offAllNamed(RouteName.root);
+        } else {
+          Get.snackbar(
+            'Invalid',
+            'The OTP code you entered is invalid (p.s its 1-6)',
+            colorText: Colors.white,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.black,
+            shouldIconPulse: true,
+          );
+        }
+      },
+    );
 
-    if (response?.accessToken != null) {
-      box.write('token', response?.accessToken);
-      userToken.value = box.read("token");
-      await fetchingMe(box.read("token"));
-      Get.offAllNamed(RouteName.root);
-      loginModel.value = response;
-    } else {
-      Get.snackbar(
-        'Invalid',
-        'The OTP code you entered is invalid (p.s its 1-6)',
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.black,
-        shouldIconPulse: true,
-      );
-    }
+    // var response = await RestServices.login(body);
+
+    // if (response?.accessToken != null) {
+    //   box.write('token', response?.accessToken);
+    //   userToken.value = box.read("token");
+    //   await fetchingMe(box.read("token"));
+    //   Get.offAllNamed(RouteName.root);
+    //   loginModel.value = response;
+    // } else {
+    // Get.snackbar(
+    //   'Invalid',
+    //   'The OTP code you entered is invalid (p.s its 1-6)',
+    //   colorText: Colors.white,
+    //   snackPosition: SnackPosition.TOP,
+    //   backgroundColor: Colors.black,
+    //   shouldIconPulse: true,
+    // );
+    // }
   }
 
   Future<void> fetchingMe(String token) async {
-    var respondMe = await RestServices.fetchMe(token);
-    meModel.value = respondMe;
+    // var respondMe = await RestServices.fetchMe(token);
+    // meModel.value = respondMe;
+
+    await BaseResponse<MeModel>()
+        .getData(
+            path: ApiEndpoint.AUTH_ME,
+            fromJson: meModelFromJson,
+            token: box.read("token"))
+        .then(
+          (response) => response != null
+              ? meModel.value = response
+              : EasyLoading.showInfo('${SimError.APIERROR}'),
+        );
+    update();
   }
 }

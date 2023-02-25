@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_brace_in_string_interps, avoid_print
+// ignore_for_file: prefer_const_constructors, unnecessary_brace_in_string_interps, avoid_print, unrelated_type_equality_checks
 
 import 'dart:async';
 
@@ -19,10 +19,11 @@ class InSessionController extends GetxController {
   Rx<MenuLiteModels?> menuLiteModels = MenuLiteModels().obs;
   Rx<CartItemModels?> cartItemModels = CartItemModels().obs;
   Rx<SessionSummaryModel?> sessionSummaryModel = SessionSummaryModel().obs;
-  List<dynamic> menuElement = [].obs;
+
   var status = ["Only Me", "Group", "Shared With"].obs;
   var statusSet = "Only Me".obs;
   var count = 0.obs;
+  var leaderName = [].obs;
 
   var box = GetStorage();
   Timer? timer;
@@ -42,14 +43,12 @@ class InSessionController extends GetxController {
 
   void increment() {
     count++;
-    // personController.value?.text = count.value.toString();
   }
 
   void decrement() {
     if (count != 0) {
       count--;
     }
-    // personController.value?.text = count.value.toString();
   }
 
   Future<void> fetchingMeIncludeItems(String token) async {
@@ -79,17 +78,6 @@ class InSessionController extends GetxController {
         box.read("token"), meIncludeItemModels.value?.outlet?.id);
     menuLiteModels.value = responseMenuLite;
 
-    var item = menuLiteModels.value;
-
-    for (var asd in item!.menus!) {
-      Map<String, dynamic> body = {
-        "id": asd.id,
-        "name": asd.fullName,
-        "group": asd.categories?[0].master?.name,
-      };
-      menuElement.add(body);
-    }
-
     print("Menu Lite Models ${meIncludeItemModels.toString()}");
   }
 
@@ -104,6 +92,12 @@ class InSessionController extends GetxController {
     var responseSessionSummary =
         await RestServices.fetchSessionSummary(box.read("token"));
     sessionSummaryModel.value = responseSessionSummary;
+
+    leaderName.value = sessionSummaryModel.value!.members!.where(
+      (element) {
+        return element.isLeader == true;
+      },
+    ).toList();
 
     print("Session Summary Models ${sessionSummaryModel.toString()}");
   }

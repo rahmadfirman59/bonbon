@@ -2,6 +2,8 @@
 
 import 'dart:convert';
 
+import 'package:bonbon_new/api/base/base_response.dart';
+import 'package:bonbon_new/api/const/api_endpoint.dart';
 import 'package:bonbon_new/api/rest_service.dart';
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/routes/routes_name.dart';
@@ -41,19 +43,33 @@ class LoginController extends GetxController {
   otpLogin(String? phoneNumber) async {
     GlobalHelper.easyLoading();
 
-    Map<String, String> body = {
+    Map<String, String> data = {
       "phone": phoneNumber ?? "",
     };
 
-    var response = await RestServices.loginOtp(body);
+    // var response = await RestServices.loginOtp(body);
 
-    if (response == true) {
-      EasyLoading.dismiss();
-      EasyLoading.showSuccess("OTP Send");
-      Get.toNamed(RouteName.otp, parameters: body);
-    } else {
-      EasyLoading.dismiss();
-      EasyLoading.showError("Error " + response.toString());
-    }
+    // if (response == true) {
+    //   EasyLoading.dismiss();
+    //   EasyLoading.showSuccess("OTP Send");
+    //   Get.toNamed(RouteName.otp, parameters: body);
+    // } else {
+    //   EasyLoading.dismiss();
+    //   EasyLoading.showError("Error " + response.toString());
+    // }
+    await BaseResponse<bool>()
+        .postData(
+      path: ApiEndpoint.REQUEST_OTP,
+      data: data,
+    )
+        .then(
+      (res) {
+        if (res == true) {
+          EasyLoading.dismiss();
+          EasyLoading.showSuccess("OTP Send");
+          Get.toNamed(RouteName.otp, parameters: data);
+        }
+      },
+    );
   }
 }

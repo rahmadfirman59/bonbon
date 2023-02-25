@@ -10,13 +10,7 @@ class GlobalHelper extends GetxController {
   static final timeFormat = DateFormat('hh:mm');
   static easyLoading() {
     EasyLoading.show(
-      status: 'Loading...',
-      indicator: LoadingBouncingGrid.square(
-        borderSize: 3.0,
-        size: 30.0,
-        backgroundColor: Colors.white,
-        duration: Duration(milliseconds: 1000),
-      ),
+      status: 'Waiting..',
     );
   }
 }

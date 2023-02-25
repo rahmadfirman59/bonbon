@@ -6,10 +6,11 @@ import 'package:bonbon_new/routes/routes_name.dart';
 import 'package:bonbon_new/theme.dart';
 import 'package:bonbon_new/ui/in_session/widgets/session_categories.dart';
 import 'package:bonbon_new/ui/in_session/widgets/session_menu.dart';
-
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 class InSession extends StatelessWidget {
   const InSession({Key? key}) : super(key: key);
@@ -39,21 +40,24 @@ class InSession extends StatelessWidget {
                 fontWeight: FontWeight.w800),
           )),
       actions: [
-        // Padding(
-        //   padding: EdgeInsets.all(8),
-        //   child: IconButton(
-
-        //     Icons.shopping_bag,
-        //     color: Colors.white,
-        //   ),
-        // )
-        IconButton(
-          onPressed: () {
-            Get.toNamed(RouteName.cart_item);
-          },
-          icon: Icon(
-            Icons.shopping_bag,
-            color: Colors.white,
+        badges.Badge(
+          showBadge: true,
+          badgeContent: Obx(() => Text(
+                "${inSessionController.cartItemModels.value?.items?.length}",
+                style: TextStyle(color: Colors.red),
+              )),
+          position: badges.BadgePosition.topStart(top: 3, start: 3),
+          badgeStyle: badges.BadgeStyle(
+            badgeColor: Colors.white,
+          ),
+          child: IconButton(
+            onPressed: () {
+              Get.toNamed(RouteName.cart_item);
+            },
+            icon: Icon(
+              Icons.shopping_bag,
+              color: Colors.white,
+            ),
           ),
         )
       ],
@@ -86,20 +90,24 @@ class InSession extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Obx(() => Text(
-                            "Table ${inSessionController.sessionSummaryModel.value?.table?.name}",
-                            style: TextStyle(
-                                fontSize: 16.sp,
-                                fontFamily: BaseTheme.font_family_open,
-                                fontWeight: FontWeight.w800),
-                          )),
-                      Obx(() => Text(
-                            "${inSessionController.sessionSummaryModel.value?.members?.length}/${inSessionController.sessionSummaryModel.value?.table?.pax} Pax",
-                            style: TextStyle(
-                                fontSize: 16.sp,
-                                fontFamily: BaseTheme.font_family_open,
-                                fontWeight: FontWeight.w800),
-                          )),
+                      Obx(
+                        () => Text(
+                          "Table ${inSessionController.sessionSummaryModel.value?.table?.name}",
+                          style: TextStyle(
+                              fontSize: 16.sp,
+                              fontFamily: BaseTheme.font_family_open,
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                      Obx(
+                        () => Text(
+                          "${inSessionController.sessionSummaryModel.value?.members?.length}/${inSessionController.sessionSummaryModel.value?.pax} Pax",
+                          style: TextStyle(
+                              fontSize: 16.sp,
+                              fontFamily: BaseTheme.font_family_open,
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -108,12 +116,14 @@ class InSession extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "${inSessionController.sessionSummaryModel.value?.members?[0].user?.name}",
-                        style: TextStyle(
-                            fontSize: 12.sp,
-                            fontFamily: BaseTheme.font_family_sf,
-                            fontWeight: FontWeight.w400),
+                      Obx(
+                        () => Text(
+                          "${inSessionController.leaderName.value[0].user.name}",
+                          style: TextStyle(
+                              fontSize: 12.sp,
+                              fontFamily: BaseTheme.font_family_sf,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ),
                       Obx(
                         () => Text(
@@ -144,6 +154,71 @@ class InSession extends StatelessWidget {
                     Get.toNamed(RouteName.session_share_qr);
                     break;
                   case 1:
+                    Get.bottomSheet(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 32.h,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: Text(
+                              'Table Members',
+                              style: TextStyle(
+                                  color: BaseTheme.color_grey_8,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 16.sp,
+                                  fontFamily: BaseTheme.font_family_open),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: Container(
+                              height: 300,
+                              child: ListView.builder(
+                                itemCount: inSessionController
+                                    .sessionSummaryModel.value?.members?.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  var members = inSessionController
+                                      .sessionSummaryModel
+                                      .value
+                                      ?.members?[index];
+                                  return ListTile(
+                                    leading: SizedBox(
+                                      width: 64.w,
+                                      height: 64.h,
+                                      child: Lottie.network(
+                                        'https://assets9.lottiefiles.com/packages/lf20_dggAm75MbY.json',
+                                      ),
+                                    ),
+                                    title: Text(members?.user?.name ?? ""),
+                                    subtitle: members?.isLeader == true
+                                        ? Text("Admin Table")
+                                        : Text(
+                                            "Start ${GlobalHelper.timeFormat.format(members?.createdAt ?? DateTime.now())}",
+                                          ),
+                                    trailing: members?.isLeader == false
+                                        ? Icon(Icons.delete)
+                                        : SizedBox.shrink(),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.only(topLeft: Radius.circular(20)),
+                      ),
+                      enableDrag: false,
+                    );
+
                     break;
                   case 2:
                     break;
@@ -157,7 +232,7 @@ class InSession extends StatelessWidget {
               backgroundColor: Colors.white,
               selectedItemColor: BaseTheme.color_grey_8,
               unselectedItemColor: BaseTheme.color_grey_8,
-              items: const [
+              items: [
                 BottomNavigationBarItem(
                   label: "Share QR",
                   icon: Icon(Icons.share),
@@ -172,7 +247,17 @@ class InSession extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   label: "Order Status",
-                  icon: Icon(Icons.layers),
+                  icon: badges.Badge(
+                      position: badges.BadgePosition.topEnd(top: -10, end: -6),
+                      badgeContent: Text(
+                        "3",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: BaseTheme.font_family_sf),
+                      ),
+                      child: Icon(Icons.layers)),
                 ),
               ],
             ),

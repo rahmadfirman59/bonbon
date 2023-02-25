@@ -10,7 +10,7 @@ import 'package:get_storage/get_storage.dart';
 class AuthController extends GetxController {
   static GetStorage box = GetStorage();
   String? getToken() => box.read('token');
-  Rx<MeModel?> meModel = MeModel().obs;
+  var meModel = MeModel().obs;
 
   @override
   void onInit() {
@@ -39,6 +39,6 @@ class AuthController extends GetxController {
     } else {
       Get.offAllNamed(RouteName.index);
     }
-    meModel.value = respondMe;
+    meModel.value = respondMe!;
   }
 }

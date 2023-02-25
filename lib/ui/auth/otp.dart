@@ -221,8 +221,10 @@ class Otp extends StatelessWidget {
                           ? false
                           : true,
                       onPressed: () {
-                        otpController.login(Get.parameters["phone"],
-                            otpController.otpfield.value);
+                        otpController.otpfield.value.length < 6
+                            ? null
+                            : otpController.login(Get.parameters["phone"],
+                                otpController.otpfield.value);
                         // Get.toNamed(RouteName.create_account);
                       },
                       fontSize: 16.sp,
