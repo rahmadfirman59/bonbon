@@ -5,4 +5,6 @@ abstract class ApiEndpoint {
   static const REQUEST_OTP = 'auth/login-otp';
   static const OTP_LOGIN = 'auth/login';
   static const AUTH_ME = 'auth/me';
+  static const POPULAR_RESTAURANT = 'outlet?include=images';
+  static const CHECK_TABLE = 'search/';
 }

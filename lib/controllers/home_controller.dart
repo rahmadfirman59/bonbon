@@ -1,8 +1,12 @@
 // ignore_for_file: avoid_returning_null_for_void
 
+import 'package:bonbon_new/api/base/base_response.dart';
+import 'package:bonbon_new/api/const/api_endpoint.dart';
+import 'package:bonbon_new/api/const/sim_error.dart';
 import 'package:bonbon_new/api/rest_service.dart';
 import 'package:bonbon_new/models/nearby_restaurant_model.dart';
 import 'package:bonbon_new/models/popular_restaurant_model.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
@@ -27,11 +31,22 @@ class HomeController extends GetxController {
   Future<void> fetchPopularRestaurant() async {
     var response = await RestServices.fetchPopularRestaurant();
 
-    if (response != null) {
-      popularRestaurantModel.value = response;
-    } else {
-      return null;
-    }
+    // if (response != null) {
+    //   popularRestaurantModel.value = response;
+    // } else {
+    //   return null;
+    // }
+    await BaseResponse<PopularRestaurantModel>()
+        .getData(
+          path: ApiEndpoint.POPULAR_RESTAURANT,
+          fromJson: popularRestaurantModelFromJson,
+        )
+        .then(
+          (response) => response != null
+              ? popularRestaurantModel.value = response
+              : EasyLoading.showInfo('${SimError.APIERROR}'),
+        );
+    update();
   }
 
   Future<void> fetchNearbyRestaurantModel() async {
