@@ -7,4 +7,6 @@ abstract class ApiEndpoint {
   static const AUTH_ME = 'auth/me';
   static const POPULAR_RESTAURANT = 'outlet?include=images';
   static const CHECK_TABLE = 'search/';
+  static const SESSION = 'session';
+  static const OUTLET = 'outlet';
 }

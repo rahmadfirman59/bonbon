@@ -12,16 +12,17 @@ class SessionCategories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
+    return Obx(
+      () => Container(
         height: 32,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount:
-              inSessionController.menuLiteModels.value?.categories?.length,
+              inSessionController.menuLiteModels.value.categories?.length,
           itemBuilder: (BuildContext context, int index) {
             var listItem =
-                inSessionController.menuLiteModels.value?.categories?[index];
+                inSessionController.menuLiteModels.value.categories?[index];
             return Row(
               children: [
                 Container(
@@ -39,6 +40,8 @@ class SessionCategories extends StatelessWidget {
               ],
             );
           },
-        )));
+        ),
+      ),
+    );
   }
 }

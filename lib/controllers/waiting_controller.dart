@@ -2,9 +2,13 @@
 
 import 'dart:async';
 
+import 'package:bonbon_new/api/base/base_response.dart';
+import 'package:bonbon_new/api/const/api_endpoint.dart';
+import 'package:bonbon_new/api/const/sim_error.dart';
 import 'package:bonbon_new/api/rest_service.dart';
 import 'package:bonbon_new/models/me_model.dart';
 import 'package:bonbon_new/routes/routes_name.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -29,14 +33,28 @@ class WaitingController extends GetxController {
       timerDispose();
       fetchingMe(token);
     });
-    var respondMe = await RestServices.fetchMe(token);
-    meModel.value = respondMe;
+    await BaseResponse<MeModel>()
+        .getData(
+            path: ApiEndpoint.AUTH_ME,
+            fromJson: meModelFromJson,
+            token: box.read("token"))
+        .then((response) {
+      meModel.value = response;
 
-    if (meModel.value?.session == "completed") {
-      Get.offAllNamed(RouteName.home);
-    } else if (meModel.value?.session == "active") {
-      Get.offAllNamed(RouteName.in_session);
-    }
+      if (meModel.value?.session == "active") {
+        Get.offAllNamed(RouteName.in_session);
+      } else if (meModel.value?.session == "completed") {
+        Get.offAllNamed(RouteName.home);
+      }
+    });
+    // var respondMe = await RestServices.fetchMe(token);
+    // meModel.value = respondMe;
+
+    // if (meModel.value?.session == "completed") {
+    //   Get.offAllNamed(RouteName.home);
+    // } else if (meModel.value?.session == "active") {
+    //   Get.offAllNamed(RouteName.in_session);
+    // }
   }
 
   void timerDispose() {

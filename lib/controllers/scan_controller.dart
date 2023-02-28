@@ -70,7 +70,11 @@ class ScanController extends GetxController {
         .then(
       (res) {
         EasyLoading.dismiss();
-        TableModel? response = res;
+        TableModel? tableModel = res;
+        if (tableModel != false) {
+          Get.offNamed(RouteName.create_session,
+              arguments: [tableModel?.outlet?.id, tableCode]);
+        }
       },
     );
   }

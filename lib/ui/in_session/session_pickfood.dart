@@ -365,13 +365,13 @@ class SessionPickFood extends StatelessWidget {
                           inSessionController.addToCart(
                               false,
                               inSessionController
-                                  .meIncludeItemModels.value?.members?[0].id,
+                                  .meIncludeItemModels.value.members?[0].id,
                               item.id,
                               inSessionController.notesController.text.trim(),
                               inSessionController.count.value);
                           print(item.id);
                           print(inSessionController
-                              .meIncludeItemModels.value?.members?[0].id);
+                              .meIncludeItemModels.value.members?[0].id);
                           print(inSessionController.count.value);
                           print(
                               inSessionController.notesController.text.trim());

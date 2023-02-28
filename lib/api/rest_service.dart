@@ -204,7 +204,7 @@ class RestServices {
           pwa +
           'table/' +
           tableId! +
-          "/session?include=members.user,orders.variant.images,leade",
+          "/session?include=members.user,orders.variant.images,leader",
       options: Options(
         headers: headers,
         followRedirects: false,

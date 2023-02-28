@@ -1,9 +1,8 @@
 import 'dart:io';
 
+import 'package:bonbon_new/api/dio/interceptors_wrap.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-
-import 'dio/Interceptors_wrap.dart';
 
 class NetworkManager {
   static late Response response;

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 
 class InSession extends StatelessWidget {
   const InSession({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class InSession extends StatelessWidget {
       ),
       centerTitle: true,
       title: Obx(() => Text(
-            "${inSessionController.sessionSummaryModel.value?.outlet?.name}",
+            "${inSessionController.sessionSummaryModel.value.outlet?.name}",
             style: TextStyle(
                 fontFamily: BaseTheme.font_family_open,
                 fontSize: 16.sp,
@@ -42,10 +43,15 @@ class InSession extends StatelessWidget {
       actions: [
         badges.Badge(
           showBadge: true,
-          badgeContent: Obx(() => Text(
-                "${inSessionController.cartItemModels.value?.items?.length}",
-                style: TextStyle(color: Colors.red),
-              )),
+          badgeContent:
+              inSessionController.cartItemModels.value.items?.length != 0
+                  ? Obx(
+                      () => Text(
+                        "${inSessionController.cartItemModels.value.items?.length}",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    )
+                  : Text("0"),
           position: badges.BadgePosition.topStart(top: 3, start: 3),
           badgeStyle: badges.BadgeStyle(
             badgeColor: Colors.white,
@@ -92,7 +98,7 @@ class InSession extends StatelessWidget {
                     children: [
                       Obx(
                         () => Text(
-                          "Table ${inSessionController.sessionSummaryModel.value?.table?.name}",
+                          "Table ${inSessionController.sessionSummaryModel.value.table?.name}",
                           style: TextStyle(
                               fontSize: 16.sp,
                               fontFamily: BaseTheme.font_family_open,
@@ -101,7 +107,7 @@ class InSession extends StatelessWidget {
                       ),
                       Obx(
                         () => Text(
-                          "${inSessionController.sessionSummaryModel.value?.members?.length}/${inSessionController.sessionSummaryModel.value?.pax} Pax",
+                          "${inSessionController.sessionSummaryModel.value.members?.length}/${inSessionController.sessionSummaryModel.value.pax} Pax",
                           style: TextStyle(
                               fontSize: 16.sp,
                               fontFamily: BaseTheme.font_family_open,
@@ -117,17 +123,30 @@ class InSession extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Obx(
-                        () => Text(
-                          "${inSessionController.leaderName.value[0].user.name}",
-                          style: TextStyle(
-                              fontSize: 12.sp,
-                              fontFamily: BaseTheme.font_family_sf,
-                              fontWeight: FontWeight.w400),
-                        ),
+                        () => inSessionController.leaderName.isNotEmpty
+                            ? Text(
+                                "${inSessionController.leaderName.value[0].user.name}",
+                                style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontFamily: BaseTheme.font_family_sf,
+                                    fontWeight: FontWeight.w400),
+                              )
+                            : Shimmer.fromColors(
+                                baseColor: Colors.red,
+                                highlightColor: Colors.yellow,
+                                child: Text(
+                                  'Leader',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontFamily: BaseTheme.font_family_sf,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
                       ),
                       Obx(
                         () => Text(
-                          "Start ${GlobalHelper.timeFormat.format(inSessionController.sessionSummaryModel.value?.createdAt ?? DateTime.now())}",
+                          "Start ${GlobalHelper.timeFormat.format(inSessionController.sessionSummaryModel.value.createdAt ?? DateTime.now())}",
                           style: TextStyle(
                               fontSize: 12.sp,
                               fontFamily: BaseTheme.font_family_sf,
@@ -181,12 +200,12 @@ class InSession extends StatelessWidget {
                               height: 300,
                               child: ListView.builder(
                                 itemCount: inSessionController
-                                    .sessionSummaryModel.value?.members?.length,
+                                    .sessionSummaryModel.value.members?.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   var members = inSessionController
                                       .sessionSummaryModel
                                       .value
-                                      ?.members?[index];
+                                      .members?[index];
                                   return ListTile(
                                     leading: SizedBox(
                                       width: 64.w,

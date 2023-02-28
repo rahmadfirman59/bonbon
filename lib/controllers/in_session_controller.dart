@@ -2,23 +2,27 @@
 
 import 'dart:async';
 
+import 'package:bonbon_new/api/base/base_response.dart';
+import 'package:bonbon_new/api/const/api_endpoint.dart';
 import 'package:bonbon_new/api/rest_service.dart';
+import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/models/cart_item_model.dart';
 import 'package:bonbon_new/models/me_include_items_model.dart';
 import 'package:bonbon_new/models/me_model.dart';
 import 'package:bonbon_new/models/menu_lite_model.dart';
 import 'package:bonbon_new/models/session_summary_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class InSessionController extends GetxController {
   TextEditingController notesController = TextEditingController();
-  Rx<MeModel?> meModel = MeModel().obs;
-  Rx<MeIncludeItemModels?> meIncludeItemModels = MeIncludeItemModels().obs;
-  Rx<MenuLiteModels?> menuLiteModels = MenuLiteModels().obs;
-  Rx<CartItemModels?> cartItemModels = CartItemModels().obs;
-  Rx<SessionSummaryModel?> sessionSummaryModel = SessionSummaryModel().obs;
+  var meModel = MeModel().obs;
+  var meIncludeItemModels = MeIncludeItemModels().obs;
+  var menuLiteModels = MenuLiteModels().obs;
+  var cartItemModels = CartItemModels().obs;
+  var sessionSummaryModel = SessionSummaryModel().obs;
 
   var status = ["Only Me", "Group", "Shared With"].obs;
   var statusSet = "Only Me".obs;
@@ -54,48 +58,102 @@ class InSessionController extends GetxController {
   Future<void> fetchingMeIncludeItems(String token) async {
     timer = Timer.periodic(Duration(milliseconds: 10000), (Timer t) {
       timerDispose();
-      // fetchingMeIncludeItems(token);
-      // getMenuLite(meIncludeItemModels.value?.outlet?.id);
-      // getCartItem();
-      // getSessionSummary();
+      fetchingMeIncludeItems(token);
+      getMenuLite(meIncludeItemModels.value.outlet?.id);
+      getCartItem();
+      getSessionSummary();
     });
-    var responseMeWithItem = await RestServices.fetchMeIncludeItem(token);
-    meIncludeItemModels.value = responseMeWithItem;
+    // var responseMeWithItem = await RestServices.fetchMeIncludeItem(token);
+    // meIncludeItemModels.value = responseMeWithItem;
+
+    await BaseResponse<MeIncludeItemModels>()
+        .getData(
+            path: '',
+            param: "order/me?include=items",
+            fromJson: meIncludeItemModelsFromJson,
+            token: box.read("token"))
+        .then((response) {
+      meIncludeItemModels.value = response!;
+    });
+
     print("Me Include Models ${meIncludeItemModels}");
 
-    await getMenuLite(meIncludeItemModels.value?.outlet?.id);
+    await getMenuLite(meIncludeItemModels.value.outlet?.id);
     await getCartItem();
     await getSessionSummary();
   }
 
   Future<void> fetchingMe(String token) async {
-    var respondMe = await RestServices.fetchMe(token);
-    meModel.value = respondMe;
+    // var respondMe = await RestServices.fetchMe(token);
+    // meModel.value = respondMe;
+
+    await BaseResponse<MeModel>()
+        .getData(
+            path: ApiEndpoint.AUTH_ME,
+            fromJson: meModelFromJson,
+            token: box.read("token"))
+        .then((response) {
+      meModel.value = response!;
+    });
   }
 
   Future<void> getMenuLite(String? outletId) async {
-    var responseMenuLite = await RestServices.fetchOutletMenuLite(
-        box.read("token"), meIncludeItemModels.value?.outlet?.id);
-    menuLiteModels.value = responseMenuLite;
+    // var responseMenuLite = await RestServices.fetchOutletMenuLite(
+    //     box.read("token"), meIncludeItemModels.value?.outlet?.id);
+    // menuLiteModels.value = responseMenuLite;
 
-    print("Menu Lite Models ${meIncludeItemModels.toString()}");
+    await BaseResponse<MenuLiteModels>()
+        .getData(
+            path: ApiEndpoint.OUTLET,
+            param: "/${outletId}/menu-lite",
+            fromJson: menuLiteModelsFromJson,
+            token: box.read("token"))
+        .then((response) {
+      menuLiteModels.value = response!;
+    });
+
+    // print("Menu Lite Models ${meIncludeItemModels.toString()}");
   }
 
   Future<void> getCartItem() async {
-    var responseCartitem = await RestServices.fetchCartItem(box.read("token"));
-    cartItemModels.value = responseCartitem;
+    // var responseCartitem = await RestServices.fetchCartItem(box.read("token"));
+    // cartItemModels.value = responseCartitem;
+
+    await BaseResponse<CartItemModels>()
+        .getData(
+            path: '',
+            param:
+                "cart-items?include=items,items.item,user,items.modifiers,items.members",
+            fromJson: cartItemModelsFromJson,
+            token: box.read("token"))
+        .then((response) {
+      cartItemModels.value = response!;
+    });
 
     print("Cart Item Models ${cartItemModels.toString()}");
   }
 
   Future<void> getSessionSummary() async {
-    var responseSessionSummary =
-        await RestServices.fetchSessionSummary(box.read("token"));
-    sessionSummaryModel.value = responseSessionSummary;
+    // var responseSessionSummary =
+    //     await RestServices.fetchSessionSummary(box.read("token"));
+    // sessionSummaryModel.value = responseSessionSummary;
 
-    leaderName.value = sessionSummaryModel.value!.members!.where(
+    await BaseResponse<SessionSummaryModel>()
+        .getData(
+            path: '',
+            param:
+                "session/summary?include=members.user,orders.item,orders.members,table,outlet&type=active",
+            fromJson: sessionSummaryModelFromJson,
+            token: box.read("token"))
+        .then((response) {
+      sessionSummaryModel.value = response!;
+    });
+
+    leaderName.value = sessionSummaryModel.value.members!.where(
       (element) {
-        return element.isLeader == true;
+        var lead = element.isLeader == true;
+        print("Leader Name ${element.user?.name}");
+        return lead;
       },
     ).toList();
 
@@ -104,6 +162,7 @@ class InSessionController extends GetxController {
 
   Future<void> addToCart(bool? group, String? member, String? menuId,
       String? notes, int? qty) async {
+    GlobalHelper.easyLoading();
     Map<String, dynamic> body = {
       "group": group,
       "members": [member],
@@ -112,13 +171,26 @@ class InSessionController extends GetxController {
       "note": notes,
       "qty": qty,
     };
-    var responseAddTocart =
-        await RestServices.addToCart(box.read("token"), body);
-    // var responseSessionSummary =
-    //     await RestServices.fetchSessionSummary(box.read("token"));
-    // sessionSummaryModel.value = responseSessionSummary;
+    // var responseAddTocart =
+    //     await RestServices.addToCart(box.read("token"), body);
+    // EasyLoading.dismiss();
 
-    print("Add to cart ${responseAddTocart.toString()}");
+    await BaseResponse<bool>()
+        .postData(
+      path: '',
+      param: "cart-items",
+      data: body,
+      token: box.read("token"),
+    )
+        .then((response) {
+      if (response != false) {
+        EasyLoading.showSuccess("Added to cart");
+      } else {
+        EasyLoading.showError("Error bos ");
+      }
+    });
+
+    // print("Add to cart ${responseAddTocart.toString()}");
   }
 
   void timerDispose() {

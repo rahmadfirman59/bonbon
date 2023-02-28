@@ -2,22 +2,25 @@
 
 import 'dart:async';
 
+import 'package:bonbon_new/api/const/api_endpoint.dart';
 import 'package:bonbon_new/api/rest_service.dart';
 import 'package:bonbon_new/models/check_table_session_model.dart';
 import 'package:bonbon_new/models/create_session_model.dart';
 import 'package:bonbon_new/routes/routes_name.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../api/base/base_response.dart';
+
 class CreateSessionController extends GetxController {
   Rx<TextEditingController?> personController = TextEditingController().obs;
-  RxList<CheckTableSessionModel> checkTableSessionModel =
-      <CheckTableSessionModel>[].obs;
+  var checkTableSessionModel = <CheckTableSessionModel>[].obs;
 
-  Rx<CreateSessionModel?> createSessionModel = CreateSessionModel().obs;
+  // Rx<CreateSessionModel?> createSessionModel = CreateSessionModel().obs;
   var box = GetStorage();
   var tableCode = "".obs;
   var checkInvite = true.obs;
@@ -54,20 +57,38 @@ class CreateSessionController extends GetxController {
     personController.value?.text = count.value.toString();
   }
 
-  Future<void> getSessionTable(String? tableCode) async {
-    timer = Timer.periodic(Duration(milliseconds: 5000), (Timer t) {
-      timerDispose();
-      getSessionTable(tableCode);
-    });
-    var response =
-        await RestServices.getTableSession(box.read("token"), tableCode);
+  Future<void> getSessionTable(String tableCode) async {
+    // timer = Timer.periodic(Duration(milliseconds: 5000), (Timer t) {
+    //   timerDispose();
+    //   getSessionTable(tableCode);
+    // });
+    // var response =
+    // await RestServices.getTableSession(box.read("token"), tableCode);
 
-    checkTableSessionModel.value = response;
-    update();
+    // checkTableSessionModel.value = response;
+    await BaseResponse<List<CheckTableSessionModel>>()
+        .getData(
+            path: '',
+            param:
+                'table/${tableCode}/session?include=members.user,orders.variant.images,leader',
+            fromJson: checkTableSessionModelFromJson,
+            token: box.read("token"))
+        .then(
+      (res) {
+        EasyLoading.dismiss();
+        checkTableSessionModel.value = res!;
+
+        // if (checkTableSessionModel != false) {
+        //   EasyLoading.dismiss();
+        // getTable(box.read("token"), tableCode);
+        // }
+        update();
+      },
+    );
   }
 
   void createSession(String pax, String? outletId, String tableId) async {
-    Map<String, dynamic> body = {
+    Map<String, dynamic> data = {
       "pax": int.parse(pax),
       "type": "dine_in",
       "force": true,
@@ -76,12 +97,37 @@ class CreateSessionController extends GetxController {
       "table_id": "${tableCode}",
     };
     debugPrint("$outletId dan  $tableId");
-    var response = await RestServices.createSession(box.read("token"), body);
-    createSessionModel.value = response;
+    // var response = await RestServices.createSession(box.read("token"), body);
+    // createSessionModel.value = response;
 
-    if (createSessionModel.value?.status == "awaiting_approval") {
-      Get.offNamed(RouteName.waiting_page);
-    }
+    // if (createSessionModel.value?.status == "awaiting_approval") {
+    //   Get.offNamed(RouteName.waiting_page);
+    // }
+
+    await BaseResponse<CreateSessionModel>()
+        .postData(
+            path: ApiEndpoint.SESSION,
+            data: data,
+            fromJson: createSessionModelFromJson,
+            token: box.read("token"))
+        .then(
+      (res) {
+        CreateSessionModel createSessionModel = res;
+        EasyLoading.dismiss();
+
+        if (createSessionModel.status == "awaiting_approval") {
+          Get.offNamed(RouteName.waiting_page);
+        }
+
+        // checkTableSessionModel.value = res!;
+
+        // if (checkTableSessionModel != false) {
+        //   EasyLoading.dismiss();
+        // getTable(box.read("token"), tableCode);
+        // }
+        update();
+      },
+    );
   }
 
   void timerDispose() {
