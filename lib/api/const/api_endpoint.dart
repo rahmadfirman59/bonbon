@@ -9,4 +9,5 @@ abstract class ApiEndpoint {
   static const CHECK_TABLE = 'search/';
   static const SESSION = 'session';
   static const OUTLET = 'outlet';
+  static const CART = 'cart';
 }

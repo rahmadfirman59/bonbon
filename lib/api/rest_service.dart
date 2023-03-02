@@ -313,7 +313,7 @@ class RestServices {
     var response = await client.get(
       baseUrl +
           pwa +
-          'cart-items?include=items,items.item,user,items.modifiers,items.members',
+          'cart-items?include=items,items.item,user,items.modifiers.master,items.members,items.item.images,items.item.modifiers.master',
       options: Options(
         headers: headers,
         followRedirects: false,

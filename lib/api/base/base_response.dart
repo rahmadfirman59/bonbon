@@ -53,12 +53,17 @@ class BaseResponse<T> {
         return true;
       } else if (NetworkManager.response.statusCode == 400) {
         return false;
+      } else if (NetworkManager.response.statusCode == 422) {
+        return false;
+      } else if (NetworkManager.response.statusCode == 500) {
+        return false;
       } else {
         EasyLoading.showInfo(NetworkManager.response.data);
         return null;
       }
     } catch (e) {
       EasyLoading.showError("Something wrong");
+      return e.toString();
     }
   }
 

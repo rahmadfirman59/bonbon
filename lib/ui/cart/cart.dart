@@ -38,10 +38,10 @@ class CartItem extends StatelessWidget {
           ),
           body: Obx(
             () => ListView.builder(
-              itemCount: cartController.cartItemModels.value?.items?.length,
+              itemCount: cartController.cartItemModels.value.items?.length,
               itemBuilder: (BuildContext context, int index) {
                 var listItem =
-                    cartController.cartItemModels.value?.items?[index];
+                    cartController.cartItemModels.value.items?[index];
 
                 return Padding(
                   padding: EdgeInsets.all(16),
@@ -137,7 +137,9 @@ class CartItem extends StatelessWidget {
                 child: PrimaryButton(
                   text: "Order Now",
                   isValid: true,
-                  onPressed: () {},
+                  onPressed: () {
+                    cartController.order();
+                  },
                   fontSize: 16.sp,
                 ),
               ),

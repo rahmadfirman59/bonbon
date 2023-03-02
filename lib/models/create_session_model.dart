@@ -47,7 +47,7 @@ class CreateSessionModel {
   int? charge;
   int? tax;
   dynamic refund;
-  int? netTotal;
+  dynamic netTotal;
   dynamic paymentAmount;
   dynamic paymentChange;
   dynamic paymentMethod;

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_is_empty, invalid_use_of_protected_member, sized_box_for_whitespace
 
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/controllers/in_session_controller.dart';

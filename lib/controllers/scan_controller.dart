@@ -1,6 +1,7 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings, unnecessary_brace_in_string_interps, unrelated_type_equality_checks
+
 import 'package:bonbon_new/api/base/base_response.dart';
-import 'package:bonbon_new/api/const/api_endpoint.dart';
-import 'package:bonbon_new/api/rest_service.dart';
+
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/controllers/index_controller.dart';
 import 'package:bonbon_new/models/check_table_model.dart';

@@ -70,9 +70,9 @@ class MeIncludeItemModels {
   int? myGross;
   int? myNet;
   Outlet? outlet;
-  int? sumTax;
-  int? sumCharge;
-  int? sumDiscount;
+  dynamic sumTax;
+  dynamic sumCharge;
+  dynamic sumDiscount;
   Table? table;
   List<Member>? members;
   List<dynamic>? orders;

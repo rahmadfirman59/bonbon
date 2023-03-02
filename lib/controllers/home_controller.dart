@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_returning_null_for_void
+// ignore_for_file: avoid_returning_null_for_void, unnecessary_string_interpolations
 
 import 'package:bonbon_new/api/base/base_response.dart';
 import 'package:bonbon_new/api/const/api_endpoint.dart';
@@ -29,7 +29,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchPopularRestaurant() async {
-    var response = await RestServices.fetchPopularRestaurant();
+    // var response = await RestServices.fetchPopularRestaurant();
 
     // if (response != null) {
     //   popularRestaurantModel.value = response;

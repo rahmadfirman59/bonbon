@@ -4,11 +4,10 @@ import 'dart:async';
 
 import 'package:bonbon_new/api/base/base_response.dart';
 import 'package:bonbon_new/api/const/api_endpoint.dart';
-import 'package:bonbon_new/api/const/sim_error.dart';
-import 'package:bonbon_new/api/rest_service.dart';
+
 import 'package:bonbon_new/models/me_model.dart';
 import 'package:bonbon_new/routes/routes_name.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:bonbon_new/api/base/base_response.dart';
 import 'package:bonbon_new/api/const/api_endpoint.dart';
 import 'package:bonbon_new/api/rest_service.dart';
+
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/models/cart_item_model.dart';
 import 'package:bonbon_new/models/me_include_items_model.dart';
@@ -64,7 +65,7 @@ class InSessionController extends GetxController {
       getSessionSummary();
     });
     // var responseMeWithItem = await RestServices.fetchMeIncludeItem(token);
-    // meIncludeItemModels.value = responseMeWithItem;
+    // meIncludeItemModels.value = responseMeWithItem!;
 
     await BaseResponse<MeIncludeItemModels>()
         .getData(
@@ -117,13 +118,13 @@ class InSessionController extends GetxController {
 
   Future<void> getCartItem() async {
     // var responseCartitem = await RestServices.fetchCartItem(box.read("token"));
-    // cartItemModels.value = responseCartitem;
+    // cartItemModels.value = responseCartitem!;
 
     await BaseResponse<CartItemModels>()
         .getData(
             path: '',
             param:
-                "cart-items?include=items,items.item,user,items.modifiers,items.members",
+                "cart-items?include=items,items.item,user,items.modifiers.master,items.members,items.item.images,items.item.modifiers.master",
             fromJson: cartItemModelsFromJson,
             token: box.read("token"))
         .then((response) {
@@ -185,12 +186,19 @@ class InSessionController extends GetxController {
         .then((response) {
       if (response != false) {
         EasyLoading.showSuccess("Added to cart");
+        Get.back();
       } else {
-        EasyLoading.showError("Error bos ");
+        EasyLoading.showError("Error ${response.toString()}");
       }
     });
 
     // print("Add to cart ${responseAddTocart.toString()}");
+  }
+
+  @override
+  void dispose() {
+    Get.delete<InSessionController>();
+    super.dispose();
   }
 
   void timerDispose() {
