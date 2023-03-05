@@ -117,7 +117,12 @@ class CartItem extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text("Subtotal"), Text("")],
+                    children: [
+                      Text("Subtotal"),
+                      Obx(() => Text(
+                            "${cartController.cartTotal.value.toString()}",
+                          )),
+                    ],
                   ),
                 ),
               ),

@@ -13,7 +13,7 @@ class CartController extends GetxController {
   var cartItemModels = CartItemModels().obs;
   var box = GetStorage();
   var item = [];
-  var cartTotal = 0;
+  var cartTotal = 0.obs;
 
   @override
   void onInit() {
@@ -38,6 +38,9 @@ class CartController extends GetxController {
         EasyLoading.dismiss();
         cartItemModels.value = res!;
         item = cartItemModels.value.items!;
+        for (var a in cartItemModels.value.items!) {
+          cartTotal += a.item!.price! * a.qty!;
+        }
 
         update();
       },
@@ -48,20 +51,22 @@ class CartController extends GetxController {
 
   Future<void> order() async {
     GlobalHelper.easyLoading();
-
-    await BaseResponse<bool>()
+    Map<String, dynamic> data = {};
+    await BaseResponse()
         .postData(
       path: 'order',
       param: '',
+      data: data,
       token: box.read("token"),
     )
         .then(
       (res) {
         if (res == true) {
+          print("Rest ${res.toString()}");
           EasyLoading.showSuccess("Order Placed");
 
           // Get.back();
-          // Get.back();
+          // Get.back();)
         } else {
           print(res.toString());
           EasyLoading.showError("Order Not Placed ${res.toString()}");

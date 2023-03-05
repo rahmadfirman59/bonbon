@@ -95,6 +95,8 @@ class InSessionController extends GetxController {
             token: box.read("token"))
         .then((response) {
       meModel.value = response!;
+
+      // if (meModel.value.session) {}
     });
   }
 

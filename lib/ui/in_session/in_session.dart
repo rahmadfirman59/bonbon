@@ -109,9 +109,10 @@ class InSession extends StatelessWidget {
                         () => Text(
                           "${inSessionController.sessionSummaryModel.value.members?.length}/${inSessionController.sessionSummaryModel.value.pax} Pax",
                           style: TextStyle(
-                              fontSize: 16.sp,
-                              fontFamily: BaseTheme.font_family_open,
-                              fontWeight: FontWeight.w800),
+                            fontSize: 16.sp,
+                            fontFamily: BaseTheme.font_family_open,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                     ],
@@ -257,8 +258,19 @@ class InSession extends StatelessWidget {
                   icon: Icon(Icons.share),
                 ),
                 BottomNavigationBarItem(
-                  label: "TableMate",
-                  icon: Icon(Icons.people),
+                  label: "Order Status",
+                  icon: badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: -10, end: -6),
+                    badgeContent: Text(
+                      "3",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: BaseTheme.font_family_sf),
+                    ),
+                    child: Icon(Icons.people),
+                  ),
                 ),
                 BottomNavigationBarItem(
                   label: "Call Waiter",
@@ -267,16 +279,17 @@ class InSession extends StatelessWidget {
                 BottomNavigationBarItem(
                   label: "Order Status",
                   icon: badges.Badge(
-                      position: badges.BadgePosition.topEnd(top: -10, end: -6),
-                      badgeContent: Text(
-                        "3",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: BaseTheme.font_family_sf),
-                      ),
-                      child: Icon(Icons.layers)),
+                    position: badges.BadgePosition.topEnd(top: -10, end: -6),
+                    badgeContent: Text(
+                      "3",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: BaseTheme.font_family_sf),
+                    ),
+                    child: Icon(Icons.layers),
+                  ),
                 ),
               ],
             ),
