@@ -29,6 +29,7 @@ class InSessionController extends GetxController {
   var statusSet = "Only Me".obs;
   var count = 0.obs;
   var leaderName = [].obs;
+  var requestJoin = 0.obs;
 
   var box = GetStorage();
   Timer? timer;
@@ -90,9 +91,10 @@ class InSessionController extends GetxController {
 
     await BaseResponse<MeModel>()
         .getData(
-            path: ApiEndpoint.AUTH_ME,
-            fromJson: meModelFromJson,
-            token: box.read("token"))
+      path: ApiEndpoint.AUTH_ME,
+      fromJson: meModelFromJson,
+      token: box.read("token"),
+    )
         .then((response) {
       meModel.value = response!;
 
@@ -160,7 +162,16 @@ class InSessionController extends GetxController {
       },
     ).toList();
 
+    requestJoin.value = 0;
+    sessionSummaryModel.value.members!.where((element) {
+      var pending = element.status == "pending";
+      if (pending) {
+        requestJoin += 1;
+      }
+      return pending;
+    }).toList();
     print("Session Summary Models ${sessionSummaryModel.toString()}");
+    print("Pending Member ${requestJoin}");
   }
 
   Future<void> addToCart(bool? group, String? member, String? menuId,
@@ -188,6 +199,32 @@ class InSessionController extends GetxController {
         .then((response) {
       if (response != false) {
         EasyLoading.showSuccess("Added to cart");
+        Get.back();
+      } else {
+        EasyLoading.showError("Error ${response.toString()}");
+      }
+    });
+
+    // print("Add to cart ${responseAddTocart.toString()}");
+  }
+
+  Future<void> action(
+      String? memberId, String? memberName, String? action) async {
+    GlobalHelper.easyLoading();
+    Map<String, dynamic> body = {
+      "type": action,
+    };
+
+    await BaseResponse<bool>()
+        .postData(
+      path: '',
+      param: "session/member/${memberId}/action",
+      data: body,
+      token: box.read("token"),
+    )
+        .then((response) {
+      if (response != false) {
+        EasyLoading.showSuccess("${memberName} ${action}");
         Get.back();
       } else {
         EasyLoading.showError("Error ${response.toString()}");

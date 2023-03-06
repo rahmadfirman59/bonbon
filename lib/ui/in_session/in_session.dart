@@ -209,20 +209,157 @@ class InSession extends StatelessWidget {
                                       .members?[index];
                                   return ListTile(
                                     leading: SizedBox(
-                                      width: 64.w,
+                                      width: 30.w,
                                       height: 64.h,
                                       child: Lottie.network(
                                         'https://assets9.lottiefiles.com/packages/lf20_dggAm75MbY.json',
                                       ),
                                     ),
-                                    title: Text(members?.user?.name ?? ""),
+                                    title: members?.status == "active"
+                                        ? Text(
+                                            members?.user?.name ?? "",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontFamily:
+                                                    BaseTheme.font_family_sf,
+                                                fontSize: 14.sp,
+                                                color: BaseTheme.color_grey_9),
+                                          )
+                                        : Text(members?.user?.name ?? "",
+                                            style: TextStyle(
+                                              color: BaseTheme.color_grey_5,
+                                              fontWeight: FontWeight.w700,
+                                              fontFamily:
+                                                  BaseTheme.font_family_sf,
+                                              fontSize: 14.sp,
+                                            )),
                                     subtitle: members?.isLeader == true
                                         ? Text("Admin Table")
-                                        : Text(
-                                            "Start ${GlobalHelper.timeFormat.format(members?.createdAt ?? DateTime.now())}",
-                                          ),
+                                        : members?.status == "active"
+                                            ? Text(
+                                                "Start ${GlobalHelper.timeFormat.format(members?.createdAt ?? DateTime.now())}",
+                                                style: TextStyle(
+                                                    color:
+                                                        BaseTheme.color_grey_7,
+                                                    fontFamily: BaseTheme
+                                                        .font_family_sf,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              )
+                                            : Text(
+                                                "Waiting to approve.....",
+                                                style: TextStyle(
+                                                    color:
+                                                        BaseTheme.color_grey_5,
+                                                    fontFamily: BaseTheme
+                                                        .font_family_sf,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
                                     trailing: members?.isLeader == false
-                                        ? Icon(Icons.delete)
+                                        ? members?.status == "pending"
+                                            ? Container(
+                                                width: 100,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    // Icon(Icons.close),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        Get.defaultDialog(
+                                                          title: "Member",
+                                                          titleStyle: TextStyle(
+                                                              fontFamily: BaseTheme
+                                                                  .font_family_sf,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: 14.sp),
+                                                          content: Text(
+                                                              "Are you sure want to decline ${members?.user?.name} ?"),
+                                                          onConfirm: () {
+                                                            inSessionController
+                                                                .action(
+                                                                    members?.id,
+                                                                    members
+                                                                        ?.user
+                                                                        ?.name,
+                                                                    "declined");
+                                                            Get.back();
+                                                          },
+                                                          textConfirm: "Yes",
+                                                          textCancel: "Cancel",
+                                                          buttonColor: BaseTheme
+                                                              .main_color,
+                                                          confirmTextColor:
+                                                              Colors.black,
+                                                          onCancel: () {
+                                                            Get.back();
+                                                          },
+                                                          radius: 10,
+                                                        );
+
+                                                        print("Action");
+                                                      },
+                                                      icon: Icon(Icons.close),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.w,
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Get.defaultDialog(
+                                                          title: "Member",
+                                                          titleStyle: TextStyle(
+                                                              fontFamily: BaseTheme
+                                                                  .font_family_sf,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: 14.sp),
+                                                          content: Text(
+                                                              "Are you sure to approve ${members?.user?.name} ?"),
+                                                          onConfirm: () {
+                                                            inSessionController
+                                                                .action(
+                                                                    members?.id,
+                                                                    members
+                                                                        ?.user
+                                                                        ?.name,
+                                                                    "approved");
+                                                            Get.back();
+                                                          },
+                                                          textConfirm: "Yes",
+                                                          textCancel: "Cancel",
+                                                          buttonColor: BaseTheme
+                                                              .main_color,
+                                                          confirmTextColor:
+                                                              Colors.black,
+                                                          onCancel: () {
+                                                            Get.back();
+                                                          },
+                                                          radius: 10,
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        50),
+                                                            color: BaseTheme
+                                                                .primary_color),
+                                                        height: 32,
+                                                        width: 32,
+                                                        child:
+                                                            Icon(Icons.check),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            : SizedBox.shrink()
                                         : SizedBox.shrink(),
                                   );
                                 },
@@ -261,13 +398,15 @@ class InSession extends StatelessWidget {
                   label: "Order Status",
                   icon: badges.Badge(
                     position: badges.BadgePosition.topEnd(top: -10, end: -6),
-                    badgeContent: Text(
-                      "3",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: BaseTheme.font_family_sf),
+                    badgeContent: Obx(
+                      () => Text(
+                        "${inSessionController.requestJoin.value}",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: BaseTheme.font_family_sf),
+                      ),
                     ),
                     child: Icon(Icons.people),
                   ),
