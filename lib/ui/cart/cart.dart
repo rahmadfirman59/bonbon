@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 class CartItem extends StatelessWidget {
   const CartItem({Key? key}) : super(key: key);
@@ -37,60 +38,85 @@ class CartItem extends StatelessWidget {
             ),
           ),
           body: Obx(
-            () => ListView.builder(
-              itemCount: cartController.cartItemModels.value.items?.length,
-              itemBuilder: (BuildContext context, int index) {
-                var listItem =
-                    cartController.cartItemModels.value.items?[index];
+            () => cartController.cartItemModels.value!.items!.isNotEmpty
+                ? ListView.builder(
+                    itemCount:
+                        cartController.cartItemModels.value?.items!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var listItem =
+                          cartController.cartItemModels.value?.items![index];
 
-                return Padding(
-                  padding: EdgeInsets.all(16),
-                  child: ListTile(
-                      title: Text(
-                        "${listItem?.item?.fullName}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12.sp,
-                            fontFamily: BaseTheme.font_family_sf),
-                      ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ExpandablePanel(
-                          header: Text("Details"),
-                          collapsed: Text(
-                            "",
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          expanded: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.person,
-                                  ),
-                                  Text("${listItem?.members?[0].user?.name}")
-                                ],
-                              ),
-                              listItem!.modifiers!.isNotEmpty
-                                  ? Row(
+                      return Padding(
+                        padding: EdgeInsets.all(16),
+                        child: ListTile(
+                            title: Text(
+                              "${listItem?.item?.fullName}",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12.sp,
+                                  fontFamily: BaseTheme.font_family_sf),
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ExpandablePanel(
+                                header: Text("Details"),
+                                collapsed: Text(
+                                  "",
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                expanded: Column(
+                                  children: [
+                                    Row(
                                       children: [
                                         Icon(
-                                          Icons.note_add,
+                                          Icons.person,
                                         ),
                                         Text(
-                                            "${listItem.modifiers?[0].master?.name}")
+                                            "${listItem?.members?[0].user?.name}")
                                       ],
-                                    )
-                                  : SizedBox.shrink()
-                            ],
-                          ),
-                        ),
+                                    ),
+                                    listItem!.modifiers!.isNotEmpty
+                                        ? Row(
+                                            children: [
+                                              Icon(
+                                                Icons.note_add,
+                                              ),
+                                              Text(
+                                                  "${listItem.modifiers?[0].master?.name}")
+                                            ],
+                                          )
+                                        : SizedBox.shrink()
+                                  ],
+                                ),
+                              ),
+                            ),
+                            trailing:
+                                Icon(Icons.keyboard_arrow_right_outlined)),
+                      );
+                    },
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Lottie.network(
+                          'https://assets9.lottiefiles.com/private_files/lf30_e3pteeho.json'),
+                      Text(
+                        "Your Cart is Empty",
+                        style: TextStyle(
+                            fontFamily: BaseTheme.font_family_sf,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700),
                       ),
-                      trailing: Icon(Icons.keyboard_arrow_right_outlined)),
-                );
-              },
-            ),
+                      // Text(
+                      //   "New Session is being approved",
+                      //   style: TextStyle(
+                      //       fontFamily: BaseTheme.font_family_sf,
+                      //       fontSize: 15,
+                      //       fontWeight: FontWeight.w400),
+                      // )
+                    ],
+                  ),
           ),
         ),
         Align(

@@ -16,6 +16,7 @@ class SessionPickFood extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InSessionController inSessionController = Get.find();
+    inSessionController.count.value = 1;
     var item = Get.arguments[0];
     final myAppBar = AppBar(
       backgroundColor: Colors.transparent,

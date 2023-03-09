@@ -171,7 +171,9 @@ class InSession extends StatelessWidget {
               onTap: (index) async {
                 switch (index) {
                   case 0:
-                    Get.toNamed(RouteName.session_share_qr);
+                    Get.toNamed(RouteName.session_share_qr, arguments: [
+                      inSessionController.sessionSummaryModel.value.id
+                    ]);
                     break;
                   case 1:
                     Get.bottomSheet(
@@ -256,7 +258,7 @@ class InSession extends StatelessWidget {
                                                     fontWeight:
                                                         FontWeight.w400),
                                               ),
-                                    trailing: members?.isLeader == false
+                                    trailing: members?.isLeader == true
                                         ? members?.status == "pending"
                                             ? Container(
                                                 width: 100,
@@ -395,20 +397,25 @@ class InSession extends StatelessWidget {
                   icon: Icon(Icons.share),
                 ),
                 BottomNavigationBarItem(
-                  label: "Order Status",
-                  icon: badges.Badge(
-                    position: badges.BadgePosition.topEnd(top: -10, end: -6),
-                    badgeContent: Obx(
-                      () => Text(
-                        "${inSessionController.requestJoin.value}",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: BaseTheme.font_family_sf),
-                      ),
-                    ),
-                    child: Icon(Icons.people),
+                  label: "Table Mate",
+                  icon: Obx(
+                    () => inSessionController.requestJoin.value != 0
+                        ? badges.Badge(
+                            position:
+                                badges.BadgePosition.topEnd(top: -10, end: -6),
+                            badgeContent: Obx(
+                              () => Text(
+                                "${inSessionController.requestJoin.value}",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    fontFamily: BaseTheme.font_family_sf),
+                              ),
+                            ),
+                            child: Icon(Icons.people),
+                          )
+                        : Icon(Icons.people),
                   ),
                 ),
                 BottomNavigationBarItem(

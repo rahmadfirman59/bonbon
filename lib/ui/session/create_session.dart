@@ -160,80 +160,83 @@ class CreateSession extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
                         child: Container(
                           height: 156,
-                          child: ListView.builder(
-                            itemCount: createSessionController
-                                .checkTableSessionModel.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              var listItem = createSessionController
-                                  .checkTableSessionModel[index];
-                              return InkWell(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                      backgroundColor: Colors.transparent,
-                                      context: context,
-                                      isScrollControlled: true,
-                                      isDismissible: true,
-                                      builder: (context) => buildSheet(
-                                          listItem.orders!,
-                                          listItem.members?[0].user?.name,
-                                          listItem.pax,
-                                          listItem.netTotal));
+                          child: Obx(() => ListView.builder(
+                                itemCount: createSessionController
+                                    .checkTableSessionModel.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  var listItem = createSessionController
+                                      .checkTableSessionModel[index];
+                                  return InkWell(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          isScrollControlled: true,
+                                          isDismissible: true,
+                                          builder: (context) => buildSheet(
+                                                createSessionController,
+                                                listItem.orders!,
+                                                listItem.members?[0].user?.name,
+                                                listItem.pax,
+                                                listItem.grossTotal,
+                                                listItem.id,
+                                              ));
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(8),
+                                      width: 328,
+                                      height: 36,
+                                      color: BaseTheme.color_grey_2,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 48,
+                                            height: 20,
+                                            child: Text(
+                                              '${GlobalHelper.timeFormat.format(listItem.createdAt!)}',
+                                              style: TextStyle(
+                                                  color: BaseTheme.color_grey_8,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily:
+                                                      BaseTheme.font_family_sf),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Container(
+                                            width: 42,
+                                            height: 20,
+                                            child: Text(
+                                              "${listItem.pax}",
+                                              style: TextStyle(
+                                                  color: BaseTheme.color_grey_8,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily:
+                                                      BaseTheme.font_family_sf),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Container(
+                                            width: 214,
+                                            height: 20,
+                                            child: Text(
+                                              "${listItem.members?[0].user?.name}",
+                                              style: TextStyle(
+                                                  color: BaseTheme.color_grey_9,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontFamily:
+                                                      BaseTheme.font_family_sf),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
                                 },
-                                child: Container(
-                                  padding: EdgeInsets.all(8),
-                                  width: 328,
-                                  height: 36,
-                                  color: BaseTheme.color_grey_2,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 48,
-                                        height: 20,
-                                        child: Text(
-                                          '${GlobalHelper.timeFormat.format(listItem.createdAt!)}',
-                                          style: TextStyle(
-                                              color: BaseTheme.color_grey_8,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily:
-                                                  BaseTheme.font_family_sf),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                      Container(
-                                        width: 42,
-                                        height: 20,
-                                        child: Text(
-                                          "${listItem.pax}",
-                                          style: TextStyle(
-                                              color: BaseTheme.color_grey_8,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily:
-                                                  BaseTheme.font_family_sf),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 4,
-                                      ),
-                                      Container(
-                                        width: 214,
-                                        height: 20,
-                                        child: Text(
-                                          "${listItem.members?[0].user?.name}",
-                                          style: TextStyle(
-                                              color: BaseTheme.color_grey_9,
-                                              fontWeight: FontWeight.w700,
-                                              fontFamily:
-                                                  BaseTheme.font_family_sf),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                              )),
                         ),
                       ),
                       SizedBox(
@@ -552,8 +555,13 @@ class CreateSession extends StatelessWidget {
     );
   }
 
-  Widget buildSheet(List<dynamic> sessioSharedOrder, String? leader, int? pax,
-      dynamic netTotal) {
+  Widget buildSheet(
+      CreateSessionController createSessionController,
+      List<dynamic> sessioSharedOrder,
+      String? leader,
+      int? pax,
+      dynamic netTotal,
+      String? sessionId) {
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
       maxChildSize: 1,
@@ -662,9 +670,29 @@ class CreateSession extends StatelessWidget {
                         var listItem = sessioSharedOrder[index];
                         return listItem["type"] == "for_all"
                             ? ListTile(
-                                leading: Image.network(listItem["variant"]
-                                        ["images"][0]["thumb"]
-                                    .toString()),
+                                leading:
+                                    listItem["variant"]["images"].isNotEmpty
+                                        ? Container(
+                                            width: 54.w,
+                                            height: 54.h,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              child: Image.network(
+                                                  listItem["variant"]["images"]
+                                                          [0]["thumb"]
+                                                      .toString()),
+                                            ),
+                                          )
+                                        : Container(
+                                            width: 54.w,
+                                            height: 54.h,
+                                            child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                child: Image.asset(
+                                                    'assets/logo/logo.png')),
+                                          ),
                                 title: Text(
                                   listItem["name"],
                                   style: TextStyle(
@@ -673,13 +701,12 @@ class CreateSession extends StatelessWidget {
                                       fontFamily: BaseTheme.font_family_sf),
                                 ),
                                 subtitle: Text(
-                                  listItem["price"].toString(),
+                                  "${GlobalHelper.currency} ${GlobalHelper.formatNumber(listItem["price"].toString())}",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 12.sp,
                                       fontFamily: BaseTheme.font_family_sf),
                                 ),
-                                trailing: Text(listItem["type"]),
                               )
                             : SizedBox.shrink();
                       },
@@ -705,7 +732,8 @@ class CreateSession extends StatelessWidget {
                                 fontSize: 14.sp,
                                 fontFamily: BaseTheme.font_family_sf),
                           ),
-                          Text("Rp ${netTotal}",
+                          Text(
+                              "${GlobalHelper.currency} ${GlobalHelper.formatNumber(netTotal.toString())}",
                               style: TextStyle(
                                   color: BaseTheme.color_grey_8,
                                   fontWeight: FontWeight.w700,
@@ -738,8 +766,7 @@ class CreateSession extends StatelessWidget {
                   fontSize: 16,
                   text: "Join Now",
                   onPressed: () {
-                    // createSessionController.createSession(
-                    //     Get.arguments[1], Get.arguments[0]);
+                    createSessionController.joinSession(sessionId);
                   },
                 ),
               ),

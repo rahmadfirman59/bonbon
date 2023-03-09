@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class CartController extends GetxController {
-  var cartItemModels = CartItemModels().obs;
+  Rx<CartItemModels?> cartItemModels = CartItemModels().obs;
   var box = GetStorage();
   var item = [];
   var cartTotal = 0.obs;
@@ -22,8 +22,8 @@ class CartController extends GetxController {
   }
 
   Future<void> getCartItem() async {
-    var responseCartitem = await RestServices.fetchCartItem(box.read("token"));
-    cartItemModels.value = responseCartitem!;
+    // var responseCartitem = await RestServices.fetchCartItem(box.read("token"));
+    // cartItemModels.value = responseCartitem!;
     GlobalHelper.easyLoading();
 
     await BaseResponse<CartItemModels>()
@@ -36,9 +36,9 @@ class CartController extends GetxController {
         .then(
       (res) {
         EasyLoading.dismiss();
-        cartItemModels.value = res!;
-        item = cartItemModels.value.items!;
-        for (var a in cartItemModels.value.items!) {
+        cartItemModels.value = res;
+        item = cartItemModels.value!.items!;
+        for (var a in cartItemModels.value!.items!) {
           cartTotal += a.item!.price! * a.qty!;
         }
 

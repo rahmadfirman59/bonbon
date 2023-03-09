@@ -45,7 +45,7 @@ class _ScanState extends State<Scan> {
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
-          "Enter OTP Codes",
+          "Scan Table",
           style: TextStyle(
               color: Colors.black,
               fontSize: 20.sp,

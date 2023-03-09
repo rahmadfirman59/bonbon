@@ -4,6 +4,7 @@ import 'package:bonbon_new/theme.dart';
 import 'package:bonbon_new/ui/component/primray_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:get/get.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
@@ -12,6 +13,9 @@ class SessionShareQr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController tableCodeController = TextEditingController();
+    tableCodeController.text = Get.arguments[0];
+    var item = Get.arguments[0];
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -23,7 +27,7 @@ class SessionShareQr extends StatelessWidget {
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
-          "Share QR Codes",
+          "Share QR Codes ",
           style: TextStyle(
               color: Colors.black,
               fontSize: 20.sp,
@@ -38,12 +42,13 @@ class SessionShareQr extends StatelessWidget {
               SizedBox(
                 height: 55.h,
               ),
+
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 60.w),
                 child: PrettyQr(
                   image: AssetImage('assets/logo/logo.png'),
-                  size: 240,
-                  data: 'https://www.google.ru',
+                  size: 240.sp,
+                  data: 'https://pwa-demo.bonbon.co.id/session/${item}/join',
                   errorCorrectLevel: QrErrorCorrectLevel.M,
                   typeNumber: null,
                   roundEdges: true,
@@ -87,8 +92,7 @@ class SessionShareQr extends StatelessWidget {
                   child: TextField(
                     scrollPadding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom),
-                    // controller: scanController.tableCodeController,
-
+                    controller: tableCodeController,
                     decoration: InputDecoration(
                       suffixIcon: Icon(Icons.copy),
                       border: OutlineInputBorder(
@@ -139,7 +143,14 @@ class SessionShareQr extends StatelessWidget {
               child: PrimaryButton(
                 text: "Share",
                 isValid: true,
-                onPressed: () {
+                onPressed: () async {
+                  await FlutterShare.share(
+                      title: 'Bonbon Session',
+                      text: 'Bonbon Session',
+                      linkUrl:
+                          'https://pwa-demo.bonbon.co.id/session/${item}/join',
+                      chooserTitle: 'Share QR to your friend');
+
                   // Get.toNamed(RouteName.create_account);
                 },
                 fontSize: 16.sp,

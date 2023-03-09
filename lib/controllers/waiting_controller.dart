@@ -43,7 +43,7 @@ class WaitingController extends GetxController {
       if (meModel.value?.session == "active") {
         Get.offAllNamed(RouteName.in_session);
       } else if (meModel.value?.session == "completed") {
-        Get.offAllNamed(RouteName.home);
+        Get.offAllNamed(RouteName.index);
       }
     });
     // var respondMe = await RestServices.fetchMe(token);

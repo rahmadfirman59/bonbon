@@ -11,4 +11,10 @@ class GlobalHelper extends GetxController {
       status: 'Waiting..',
     );
   }
+
+  static String formatNumber(String n) =>
+      NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: '')
+          .format(int.parse(n));
+  static String get currency =>
+      NumberFormat.compactSimpleCurrency(locale: 'IDR').currencySymbol;
 }

@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:bonbon_new/api/const/api_endpoint.dart';
+import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 
 import 'package:bonbon_new/models/check_table_session_model.dart';
 import 'package:bonbon_new/models/create_session_model.dart';
@@ -58,10 +59,10 @@ class CreateSessionController extends GetxController {
   }
 
   Future<void> getSessionTable(String tableCode) async {
-    // timer = Timer.periodic(Duration(milliseconds: 5000), (Timer t) {
-    //   timerDispose();
-    //   getSessionTable(tableCode);
-    // });
+    timer = Timer.periodic(Duration(milliseconds: 5000), (Timer t) {
+      timerDispose();
+      getSessionTable(tableCode);
+    });
     // var response =
     // await RestServices.getTableSession(box.read("token"), tableCode);
 
@@ -125,6 +126,33 @@ class CreateSessionController extends GetxController {
         //   EasyLoading.dismiss();
         // getTable(box.read("token"), tableCode);
         // }
+        update();
+      },
+    );
+  }
+
+  Future<void> joinSession(String? sessionId) async {
+    GlobalHelper.easyLoading();
+    Map<String, dynamic> data = {
+      "invitation": false,
+    };
+
+    await BaseResponse()
+        .postData(
+            path: ApiEndpoint.SESSION,
+            param: "/${sessionId}/join",
+            data: data,
+            token: box.read("token"))
+        .then(
+      (res) {
+        EasyLoading.dismiss();
+
+        if (res == true) {
+          Get.toNamed(RouteName.waiting_page);
+        } else {
+          EasyLoading.showError("error");
+        }
+
         update();
       },
     );

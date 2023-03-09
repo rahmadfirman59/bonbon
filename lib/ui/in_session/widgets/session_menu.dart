@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/controllers/in_session_controller.dart';
 import 'package:bonbon_new/routes/routes_name.dart';
 import 'package:bonbon_new/theme.dart';
@@ -82,8 +83,16 @@ class SessionMenu extends StatelessWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Text(
+                        //   GlobalHelper.currency +
+                        //       GlobalHelper.formatNumber(items.price.toString()),
+                        //   style: TextStyle(
+                        //     fontSize: 12,
+                        //     fontFamily: BaseTheme.font_family_sf,
+                        //   ),
+                        // ),
                         Text(
-                          " Rp ${items.price.toString()}",
+                          "${GlobalHelper.currency} ${GlobalHelper.formatNumber(items.price.toString())} ",
                           style: TextStyle(
                             fontSize: 12,
                             fontFamily: BaseTheme.font_family_sf,
