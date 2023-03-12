@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print
 
+import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/controllers/in_session_controller.dart';
 import 'package:bonbon_new/theme.dart';
 
@@ -64,7 +65,7 @@ class SessionPickFood extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Text(
-                    "Rp ${item.price}",
+                    "${GlobalHelper.currency} ${GlobalHelper.formatNumber(item.price.toString())}",
                     style: TextStyle(
                         fontFamily: BaseTheme.font_family_sf,
                         fontSize: 16.sp,

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shimmer/shimmer.dart';
 
 class InSession extends StatelessWidget {
@@ -20,6 +21,9 @@ class InSession extends StatelessWidget {
   Widget build(BuildContext context) {
     final inSessionController = Get.put(InSessionController());
     // final mediaQueryHeight = MediaQuery.of(context).size.height;
+    final ItemScrollController itemScrollController = ItemScrollController();
+    final ItemPositionsListener itemPositionsListener =
+        ItemPositionsListener.create();
 
     final myAppBar = AppBar(
       backgroundColor: Colors.transparent,
@@ -160,11 +164,19 @@ class InSession extends StatelessWidget {
                 SizedBox(
                   height: 20.h,
                 ),
-                SessionCategories(inSessionController: inSessionController),
+                SessionCategories(
+                  inSessionController: inSessionController,
+                  itemScrollController: itemScrollController,
+                  itemPositionsListener: itemPositionsListener,
+                ),
                 SizedBox(
                   height: 16,
                 ),
-                SessionMenu(inSessionController: inSessionController)
+                SessionMenu(
+                  inSessionController: inSessionController,
+                  itemScrollController: itemScrollController,
+                  itemPositionsListener: itemPositionsListener,
+                )
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(
@@ -258,110 +270,103 @@ class InSession extends StatelessWidget {
                                                     fontWeight:
                                                         FontWeight.w400),
                                               ),
-                                    trailing: members?.isLeader == true
-                                        ? members?.status == "pending"
-                                            ? Container(
-                                                width: 100,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    // Icon(Icons.close),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        Get.defaultDialog(
-                                                          title: "Member",
-                                                          titleStyle: TextStyle(
-                                                              fontFamily: BaseTheme
-                                                                  .font_family_sf,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              fontSize: 14.sp),
-                                                          content: Text(
-                                                              "Are you sure want to decline ${members?.user?.name} ?"),
-                                                          onConfirm: () {
-                                                            inSessionController
-                                                                .action(
-                                                                    members?.id,
-                                                                    members
-                                                                        ?.user
-                                                                        ?.name,
-                                                                    "declined");
-                                                            Get.back();
-                                                          },
-                                                          textConfirm: "Yes",
-                                                          textCancel: "Cancel",
-                                                          buttonColor: BaseTheme
-                                                              .main_color,
-                                                          confirmTextColor:
-                                                              Colors.black,
-                                                          onCancel: () {
-                                                            Get.back();
-                                                          },
-                                                          radius: 10,
-                                                        );
+                                    trailing: members?.isLeader == false &&
+                                            members?.status == "pending"
+                                        ? Container(
+                                            width: 100,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                // Icon(Icons.close),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    Get.defaultDialog(
+                                                      title: "Member",
+                                                      titleStyle: TextStyle(
+                                                          fontFamily: BaseTheme
+                                                              .font_family_sf,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 14.sp),
+                                                      content: Text(
+                                                          "Are you sure want to decline ${members?.user?.name} ?"),
+                                                      onConfirm: () {
+                                                        inSessionController
+                                                            .action(
+                                                                members?.id,
+                                                                members?.user
+                                                                    ?.name,
+                                                                "declined");
+                                                        Get.back();
+                                                      },
+                                                      textConfirm: "Yes",
+                                                      textCancel: "Cancel",
+                                                      buttonColor:
+                                                          BaseTheme.main_color,
+                                                      confirmTextColor:
+                                                          Colors.black,
+                                                      onCancel: () {
+                                                        Get.back();
+                                                      },
+                                                      radius: 10,
+                                                    );
 
-                                                        print("Action");
-                                                      },
-                                                      icon: Icon(Icons.close),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10.w,
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Get.defaultDialog(
-                                                          title: "Member",
-                                                          titleStyle: TextStyle(
-                                                              fontFamily: BaseTheme
-                                                                  .font_family_sf,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
-                                                              fontSize: 14.sp),
-                                                          content: Text(
-                                                              "Are you sure to approve ${members?.user?.name} ?"),
-                                                          onConfirm: () {
-                                                            inSessionController
-                                                                .action(
-                                                                    members?.id,
-                                                                    members
-                                                                        ?.user
-                                                                        ?.name,
-                                                                    "approved");
-                                                            Get.back();
-                                                          },
-                                                          textConfirm: "Yes",
-                                                          textCancel: "Cancel",
-                                                          buttonColor: BaseTheme
-                                                              .main_color,
-                                                          confirmTextColor:
-                                                              Colors.black,
-                                                          onCancel: () {
-                                                            Get.back();
-                                                          },
-                                                          radius: 10,
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        50),
-                                                            color: BaseTheme
-                                                                .primary_color),
-                                                        height: 32,
-                                                        width: 32,
-                                                        child:
-                                                            Icon(Icons.check),
-                                                      ),
-                                                    )
-                                                  ],
+                                                    debugPrint("Action");
+                                                  },
+                                                  icon: Icon(Icons.close),
                                                 ),
-                                              )
-                                            : SizedBox.shrink()
+                                                SizedBox(
+                                                  width: 10.w,
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    Get.defaultDialog(
+                                                      title: "Member",
+                                                      titleStyle: TextStyle(
+                                                          fontFamily: BaseTheme
+                                                              .font_family_sf,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 14.sp),
+                                                      content: Text(
+                                                          "Are you sure to approve ${members?.user?.name} ?"),
+                                                      onConfirm: () {
+                                                        inSessionController
+                                                            .action(
+                                                                members?.id,
+                                                                members?.user
+                                                                    ?.name,
+                                                                "approved");
+                                                        Get.back();
+                                                      },
+                                                      textConfirm: "Yes",
+                                                      textCancel: "Cancel",
+                                                      buttonColor:
+                                                          BaseTheme.main_color,
+                                                      confirmTextColor:
+                                                          Colors.black,
+                                                      onCancel: () {
+                                                        Get.back();
+                                                      },
+                                                      radius: 10,
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(50),
+                                                        color: BaseTheme
+                                                            .primary_color),
+                                                    height: 32,
+                                                    width: 32,
+                                                    child: Icon(Icons.check),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
                                         : SizedBox.shrink(),
                                   );
                                 },

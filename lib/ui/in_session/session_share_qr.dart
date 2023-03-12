@@ -1,21 +1,33 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, avoid_print
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace, avoid_print, unnecessary_brace_in_string_interps
 
 import 'package:bonbon_new/theme.dart';
 import 'package:bonbon_new/ui/component/primray_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:get/get.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
-class SessionShareQr extends StatelessWidget {
+class SessionShareQr extends StatefulWidget {
   const SessionShareQr({Key? key}) : super(key: key);
 
+  @override
+  State<SessionShareQr> createState() => _SessionShareQrState();
+}
+
+class _SessionShareQrState extends State<SessionShareQr> {
   @override
   Widget build(BuildContext context) {
     TextEditingController tableCodeController = TextEditingController();
     tableCodeController.text = Get.arguments[0];
     var item = Get.arguments[0];
+    void copyClipboard() {
+      Clipboard.setData(ClipboardData(text: Get.arguments[0]))
+          .then((value) => EasyLoading.showToast("Copied to Clipboard"));
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -94,7 +106,11 @@ class SessionShareQr extends StatelessWidget {
                         bottom: MediaQuery.of(context).viewInsets.bottom),
                     controller: tableCodeController,
                     decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.copy),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            copyClipboard();
+                          },
+                          icon: Icon(Icons.copy)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.r),
                         borderSide: BorderSide(color: Colors.grey, width: 0),

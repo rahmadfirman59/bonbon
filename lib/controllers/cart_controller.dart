@@ -1,8 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:bonbon_new/api/base/base_response.dart';
-import 'package:bonbon_new/api/const/api_endpoint.dart';
-import 'package:bonbon_new/api/rest_service.dart';
+
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/models/cart_item_model.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:bonbon_new/api/base/base_response.dart';
 import 'package:bonbon_new/api/const/api_endpoint.dart';
-import 'package:bonbon_new/api/rest_service.dart';
 
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/models/cart_item_model.dart';
@@ -30,6 +29,8 @@ class InSessionController extends GetxController {
   var count = 0.obs;
   var leaderName = [].obs;
   var requestJoin = 0.obs;
+
+  var listView = true.obs;
 
   var box = GetStorage();
   Timer? timer;
