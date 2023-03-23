@@ -107,8 +107,12 @@ class SessionMenu extends StatelessWidget {
                           ),
                           trailing: InkWell(
                             onTap: () {
-                              // Get.toNamed(RouteName.session_pickfood,
-                              //     arguments: [items]);
+                              Get.toNamed(RouteName.session_pickfood,
+                                  arguments: [
+                                    items,
+                                    inSessionController
+                                        .sessionSummaryModel.value.members
+                                  ]);
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(

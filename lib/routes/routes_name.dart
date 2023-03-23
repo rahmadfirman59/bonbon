@@ -18,4 +18,5 @@ abstract class RouteName {
   static const session_share_qr = '/session_share_qr';
   static const session_pickfood = '/session_pickfood';
   static const cart_item = '/cart_item';
+  static const session_order = '/session-order';
 }

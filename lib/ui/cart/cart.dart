@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 
 import 'package:bonbon_new/controllers/cart_controller.dart';
+import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/theme.dart';
 import 'package:bonbon_new/ui/component/primray_button.dart';
 import 'package:expandable/expandable.dart';
@@ -145,9 +146,10 @@ class CartItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("Subtotal"),
-                      Obx(() => Text(
-                            "${cartController.cartTotal.value.toString()}",
-                          )),
+                      Obx(
+                        () => Text(
+                            "${GlobalHelper.currency} ${GlobalHelper.formatNumber(cartController.cartTotal.value.toString())}"),
+                      ),
                     ],
                   ),
                 ),

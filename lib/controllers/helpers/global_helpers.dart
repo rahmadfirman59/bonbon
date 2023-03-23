@@ -14,7 +14,7 @@ class GlobalHelper extends GetxController {
 
   static String formatNumber(String n) =>
       NumberFormat.currency(locale: 'id', decimalDigits: 0, symbol: '')
-          .format(int.parse(n));
+          .format(double.parse(n));
   static String get currency =>
       NumberFormat.compactSimpleCurrency(locale: 'IDR').currencySymbol;
 }

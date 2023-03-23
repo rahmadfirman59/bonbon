@@ -89,11 +89,10 @@ class BookOrderCard extends StatelessWidget {
                           children: [
                             Container(
                               height: 40,
-                              width: 100,
+                              width: 89,
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               decoration: BoxDecoration(
                                 color: Color(0xFFFAFAFA),
-                                border: Border.all(color: Colors.blue),
                                 borderRadius: BorderRadius.circular(40),
                               ),
                               child: Row(
@@ -102,9 +101,9 @@ class BookOrderCard extends StatelessWidget {
                                   Text(
                                     "Details",
                                     style: TextStyle(
-                                      color: Colors.blue,
+                                      color: BaseTheme.color_grey_2,
                                       fontSize: 12,
-                                      fontFamily: ('SanFransisco'),
+                                      fontFamily: BaseTheme.font_family_sf,
                                     ),
                                   ),
                                   Icon(

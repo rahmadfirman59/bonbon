@@ -24,12 +24,10 @@ class InSessionController extends GetxController {
   var cartItemModels = CartItemModels().obs;
   var sessionSummaryModel = SessionSummaryModel().obs;
 
-  var status = ["Only Me", "Group", "Shared With"].obs;
-  var statusSet = "Only Me".obs;
-  var count = 0.obs;
   var leaderName = [].obs;
   var requestJoin = 0.obs;
 
+  var modifiers = [].obs;
   var listView = true.obs;
 
   var box = GetStorage();
@@ -40,6 +38,8 @@ class InSessionController extends GetxController {
     super.onInit();
     fetchingMe(box.read("token"));
     fetchingMeIncludeItems(box.read("token"));
+    print("Modifiers ${modifiers} ");
+    modifiers.clear();
   }
 
   @override
@@ -48,23 +48,13 @@ class InSessionController extends GetxController {
     timer?.cancel();
   }
 
-  void increment() {
-    count++;
-  }
-
-  void decrement() {
-    if (count != 0) {
-      count--;
-    }
-  }
-
   Future<void> fetchingMeIncludeItems(String token) async {
     timer = Timer.periodic(Duration(milliseconds: 10000), (Timer t) {
       timerDispose();
-      fetchingMeIncludeItems(token);
-      getMenuLite(meIncludeItemModels.value.outlet?.id);
-      getCartItem();
-      getSessionSummary();
+      // fetchingMeIncludeItems(token);
+      // getMenuLite(meIncludeItemModels.value.outlet?.id);
+      // getCartItem();
+      // getSessionSummary();
     });
     // var responseMeWithItem = await RestServices.fetchMeIncludeItem(token);
     // meIncludeItemModels.value = responseMeWithItem!;
@@ -233,12 +223,6 @@ class InSessionController extends GetxController {
     });
 
     // print("Add to cart ${responseAddTocart.toString()}");
-  }
-
-  @override
-  void dispose() {
-    Get.delete<InSessionController>();
-    super.dispose();
   }
 
   void timerDispose() {

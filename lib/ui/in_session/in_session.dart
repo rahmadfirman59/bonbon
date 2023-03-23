@@ -387,7 +387,7 @@ class InSession extends StatelessWidget {
                   case 2:
                     break;
                   case 3:
-                    break;
+                    Get.toNamed(RouteName.session_order);
                 }
                 // indexController.currentIndex.value = index;
               },

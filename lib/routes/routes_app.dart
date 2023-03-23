@@ -8,6 +8,7 @@ import 'package:bonbon_new/ui/auth/otp.dart';
 import 'package:bonbon_new/ui/cart/cart.dart';
 import 'package:bonbon_new/ui/home/home.dart';
 import 'package:bonbon_new/ui/in_session/in_session.dart';
+import 'package:bonbon_new/ui/in_session/session_order.dart';
 import 'package:bonbon_new/ui/in_session/session_pickfood.dart';
 import 'package:bonbon_new/ui/in_session/session_share_qr.dart';
 import 'package:bonbon_new/ui/inbox/inbox.dart';
@@ -90,6 +91,10 @@ class AppRoute {
     GetPage(
       name: RouteName.cart_item,
       page: () => CartItem(),
+    ),
+    GetPage(
+      name: RouteName.session_order,
+      page: () => SessionOrder(),
     ),
   ];
 }

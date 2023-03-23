@@ -64,8 +64,7 @@ class CartController extends GetxController {
           print("Rest ${res.toString()}");
           EasyLoading.showSuccess("Order Placed");
 
-          // Get.back();
-          // Get.back();)
+          Get.back();
         } else {
           print(res.toString());
           EasyLoading.showError("Order Not Placed ${res.toString()}");

@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:bonbon_new/api/base/base_response.dart';
 import 'package:bonbon_new/api/const/api_endpoint.dart';
-import 'package:bonbon_new/api/const/sim_error.dart';
 
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/models/login_model.dart';
@@ -154,10 +153,20 @@ class OtpController extends GetxController {
             fromJson: meModelFromJson,
             token: box.read("token"))
         .then(
-          (response) => response != null
-              ? meModel.value = response
-              : EasyLoading.showInfo('${SimError.APIERROR}'),
-        );
+      (response) {
+        box.write("user_id", response?.id);
+        box.write("user_email", response?.email);
+        box.write("user_phone", response?.phone);
+        box.write("user_name", response?.name);
+        if (response?.session == "pending_open") {
+          Get.offAllNamed(RouteName.waiting_page);
+        } else if (response?.session == "active") {
+          Get.offAllNamed(RouteName.in_session);
+        } else {
+          Get.offAllNamed(RouteName.index);
+        }
+      },
+    );
     update();
   }
 }

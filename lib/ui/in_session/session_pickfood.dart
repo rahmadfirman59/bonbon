@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_print
 
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
-import 'package:bonbon_new/controllers/in_session_controller.dart';
+import 'package:bonbon_new/controllers/session_pickfood_controller.dart';
 import 'package:bonbon_new/theme.dart';
 
 import 'package:flutter/material.dart';
@@ -9,16 +9,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 
-class SessionPickFood extends StatelessWidget {
+class SessionPickFood extends StatefulWidget {
   const SessionPickFood({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<SessionPickFood> createState() => _SessionPickFoodState();
+}
+
+class _SessionPickFoodState extends State<SessionPickFood> {
+  @override
   Widget build(BuildContext context) {
-    InSessionController inSessionController = Get.find();
-    inSessionController.count.value = 1;
+    final sessionPickFoodcontroller = Get.put(SessionPickFoodController());
+
+    sessionPickFoodcontroller.count.value = 1;
     var item = Get.arguments[0];
+    sessionPickFoodcontroller.sessionMember = Get.arguments[1];
+    // sessionPickFoodcontroller.sessionMember
+    List sessionMember = Get.arguments[1];
+
+    // bool _value = false;
     final myAppBar = AppBar(
       backgroundColor: Colors.transparent,
       leading: IconButton(
@@ -76,6 +87,7 @@ class SessionPickFood extends StatelessWidget {
                 SizedBox(
                   height: 16.h,
                 ),
+                // Text(sessionPickFoodcontroller.sessionMember.toString()),
                 item.modifiers.length > 1
                     ? Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -107,37 +119,71 @@ class SessionPickFood extends StatelessWidget {
                                 return Padding(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 8.w),
-                                  child: Container(
-                                    width: 104.w,
-                                    height: 48.h,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          width: 1, color: Colors.blue),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 8.h,
-                                        ),
-                                        Text(
-                                          listItem.master.name,
-                                          style: TextStyle(
-                                              color: BaseTheme.color_blue_1,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w800),
-                                        ),
-                                        SizedBox(
-                                          height: 2.h,
-                                        ),
-                                        Text("+ ${listItem.master.price}",
-                                            style: TextStyle(
-                                                color: BaseTheme.color_blue_1,
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w800)),
-                                      ],
-                                    ),
+                                  child: InkWell(
+                                    onTap: () {
+                                      sessionPickFoodcontroller
+                                          .addOrRemoveModifiers(
+                                              listItem.master.id);
+                                    },
+                                    child: Obx(() => Container(
+                                          width: 104.w,
+                                          height: 48.h,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: sessionPickFoodcontroller
+                                                        .checkModifiers(listItem
+                                                            .master.id) ==
+                                                    false
+                                                ? BaseTheme.color_soft_4
+                                                : Colors.white,
+                                            border: Border.all(
+                                              width: 1,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 8.h,
+                                              ),
+                                              Text(
+                                                listItem.master.name,
+                                                style: TextStyle(
+                                                    color: sessionPickFoodcontroller
+                                                                .checkModifiers(
+                                                                    listItem
+                                                                        .master
+                                                                        .id) ==
+                                                            true
+                                                        ? BaseTheme.color_blue_1
+                                                        : BaseTheme
+                                                            .color_dark_1,
+                                                    fontSize: 12.sp,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                              SizedBox(
+                                                height: 2.h,
+                                              ),
+                                              Text("+ ${listItem.master.price}",
+                                                  style: TextStyle(
+                                                      color: sessionPickFoodcontroller
+                                                                  .checkModifiers(
+                                                                      listItem
+                                                                          .master
+                                                                          .id) ==
+                                                              true
+                                                          ? BaseTheme
+                                                              .color_blue_1
+                                                          : BaseTheme
+                                                              .color_dark_1,
+                                                      fontSize: 10.sp,
+                                                      fontWeight:
+                                                          FontWeight.w800)),
+                                            ],
+                                          ),
+                                        )),
                                   ),
                                 );
                               }),
@@ -165,10 +211,13 @@ class SessionPickFood extends StatelessWidget {
                       () => RadioGroup<String>.builder(
                         horizontalAlignment: MainAxisAlignment.start,
                         direction: Axis.horizontal,
-                        groupValue: inSessionController.statusSet.toString(),
-                        onChanged: (value) =>
-                            {inSessionController.statusSet.value = value ?? ""},
-                        items: inSessionController.status,
+                        groupValue:
+                            sessionPickFoodcontroller.statusSet.toString(),
+                        onChanged: (value) => {
+                          sessionPickFoodcontroller.statusSet.value =
+                              value ?? ""
+                        },
+                        items: sessionPickFoodcontroller.status,
                         itemBuilder: (item) => RadioButtonBuilder(
                           item,
                           textPosition: RadioButtonTextPosition.right,
@@ -181,74 +230,69 @@ class SessionPickFood extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.start,
-                //   children: [
-                //     Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //       children: [
-                //         Radio(
-                //           value: inSessionController.statusSet,
-                //           groupValue: inSessionController.status,
-                //           onChanged: (val) {
-                //             // setState(() {
-                //             //   radioButtonItem = 'ONE';
-                //             //   id = 1;
-                //             // });
-                //           },
-                //         ),
-                //         Text('Only Me',
-                //             style: TextStyle(
-                //               fontSize: 16.sp,
-                //               color: BaseTheme.color_grey_8,
-                //               fontFamily: BaseTheme.font_family_sf,
-                //             )),
-                //       ],
-                //     ),
-                //     SizedBox(
-                //       width: 13.w,
-                //     ),
-                //     Radio(
-                //       value: inSessionController.statusSet,
-                //       groupValue: inSessionController.status,
-                //       onChanged: (val) {
-                //         // setState(() {
-                //         //   radioButtonItem = 'TWO';
-                //         //   id = 2;
-                //         // });
-                //       },
-                //     ),
-                //     Text(
-                //       'Groups',
-                //       style: TextStyle(
-                //         fontSize: 16,
-                //         color: BaseTheme.color_grey_8,
-                //         fontFamily: BaseTheme.font_family_sf,
-                //       ),
-                //     ),
-                //     SizedBox(
-                //       width: 13.w,
-                //     ),
-                //     Radio(
-                //       value: inSessionController.statusSet,
-                //       groupValue: inSessionController.status,
-                //       onChanged: (val) {
-                //         // setState(() {
-                //         //   radioButtonItem = 'TWO';
-                //         //   id = 2;
-                //         // });
-                //       },
-                //     ),
-                //     Text(
-                //       'Shared With',
-                //       style: TextStyle(
-                //         fontSize: 16.sp,
-                //         color: BaseTheme.color_grey_8,
-                //         fontFamily: BaseTheme.font_family_sf,
-                //       ),
-                //     ),
-                //   ],
-                // ),
+                SizedBox(
+                  height: 24.h,
+                ),
+                Obx(
+                  (() => sessionPickFoodcontroller.statusSet.value ==
+                          "Shared With"
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 18.w, vertical: 10),
+                            decoration:
+                                BoxDecoration(color: BaseTheme.bg_color),
+                            height: 120.h,
+                            width: 329.w,
+                            child: ListView.builder(
+                              itemCount:
+                                  sessionPickFoodcontroller.menuElement.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTileTheme(
+                                  contentPadding: EdgeInsets.all(0),
+                                  dense: true,
+                                  horizontalTitleGap: 2,
+                                  child: CheckboxListTile(
+                                    visualDensity: VisualDensity.compact,
+                                    checkboxShape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5)),
+                                    checkColor: Colors.white,
+                                    activeColor: Colors.green,
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    title: Text(
+                                      "${sessionPickFoodcontroller.menuElement[index]['nama']}",
+                                      style: TextStyle(
+                                          fontFamily: BaseTheme.font_family_sf,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14.sp),
+                                    ),
+                                    value: sessionPickFoodcontroller
+                                        .isChecked[index],
+                                    onChanged: (value) {
+                                      print(value);
+                                      sessionPickFoodcontroller
+                                          .addOrRemoveMember(
+                                              sessionPickFoodcontroller
+                                                  .menuElement[index]["id"]);
+                                      // sessionPickFoodcontroller
+                                      //     .checkedMember[index] = value;
+                                      setState(
+                                        () {
+                                          sessionPickFoodcontroller
+                                              .isChecked[index] = value!;
+                                        },
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                      : SizedBox.shrink()),
+                ),
                 SizedBox(
                   height: 24.h,
                 ),
@@ -258,7 +302,7 @@ class SessionPickFood extends StatelessWidget {
                     width: 328.w,
                     height: 56.h,
                     child: TextField(
-                      controller: inSessionController.notesController,
+                      controller: sessionPickFoodcontroller.notesController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -280,9 +324,7 @@ class SessionPickFood extends StatelessWidget {
                             fontFamily: BaseTheme.font_family_sf,
                             fontWeight: FontWeight.w400),
                       ),
-                      onChanged: (tableCode) {
-                        print(tableCode);
-                      },
+                      onChanged: (tableCode) {},
                     ),
                   ),
                 ),
@@ -313,7 +355,7 @@ class SessionPickFood extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        inSessionController.decrement();
+                        sessionPickFoodcontroller.decrement();
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -329,7 +371,7 @@ class SessionPickFood extends StatelessWidget {
                     ),
                     Obx(
                       () => Text(
-                        inSessionController.count.value.toString(),
+                        sessionPickFoodcontroller.count.value.toString(),
                       ),
                     ),
                     SizedBox(
@@ -337,7 +379,7 @@ class SessionPickFood extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        inSessionController.increment();
+                        sessionPickFoodcontroller.increment();
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -364,19 +406,17 @@ class SessionPickFood extends StatelessWidget {
                                 15) //content padding inside button
                             ),
                         onPressed: () {
-                          inSessionController.addToCart(
-                              false,
-                              inSessionController
-                                  .meIncludeItemModels.value.members?[0].id,
-                              item.id,
-                              inSessionController.notesController.text.trim(),
-                              inSessionController.count.value);
-                          print(item.id);
-                          print(inSessionController
-                              .meIncludeItemModels.value.members?[0].id);
-                          print(inSessionController.count.value);
-                          print(
-                              inSessionController.notesController.text.trim());
+                          print(sessionPickFoodcontroller.statusSet);
+                          sessionPickFoodcontroller.addToCart(
+                            sessionPickFoodcontroller.statusSet,
+                            sessionMember,
+                            item.id,
+                            sessionPickFoodcontroller.notesController.text
+                                .trim(),
+                            sessionPickFoodcontroller.count.value,
+                          );
+
+                          sessionPickFoodcontroller.notesController.clear();
                           // inSessionController.addToCart(member, menuId, inSessionController.count.value)
                         },
                         child: Text("Add to Basket",
