@@ -10,4 +10,5 @@ abstract class ApiEndpoint {
   static const SESSION = 'session';
   static const OUTLET = 'outlet';
   static const CART = 'cart';
+  static const XENDIT_CHECKOUT_URL = 'https://checkout-staging.xendit.co/api/';
 }

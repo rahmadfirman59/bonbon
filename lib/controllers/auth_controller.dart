@@ -36,6 +36,8 @@ class AuthController extends GetxController {
       Get.offAllNamed(RouteName.waiting_page);
     } else if (respondMe?.session == "active") {
       Get.offAllNamed(RouteName.in_session);
+    } else if (respondMe?.session == "payment") {
+      Get.offAllNamed(RouteName.payment);
     } else {
       Get.offAllNamed(RouteName.index);
     }

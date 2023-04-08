@@ -13,6 +13,9 @@ import 'package:bonbon_new/ui/in_session/session_pickfood.dart';
 import 'package:bonbon_new/ui/in_session/session_share_qr.dart';
 import 'package:bonbon_new/ui/inbox/inbox.dart';
 import 'package:bonbon_new/ui/index.dart';
+import 'package:bonbon_new/ui/payment/pay_view.dart';
+import 'package:bonbon_new/ui/payment/paymen_success.dart';
+import 'package:bonbon_new/ui/payment/payment.dart';
 import 'package:bonbon_new/ui/restaurant/restaurant.dart';
 import 'package:bonbon_new/ui/scan/scan.dart';
 import 'package:bonbon_new/ui/session/choose_session.dart';
@@ -95,6 +98,21 @@ class AppRoute {
     GetPage(
       name: RouteName.session_order,
       page: () => SessionOrder(),
+    ),
+    GetPage(
+      name: RouteName.payment,
+      page: () => Payment(),
+    ),
+    GetPage(
+      name: RouteName.pay_view,
+      page: () => PayView(
+        bankVa: '',
+        invoiceId: '',
+      ),
+    ),
+    GetPage(
+      name: RouteName.payment_success,
+      page: () => PaymentSuccess(),
     ),
   ];
 }

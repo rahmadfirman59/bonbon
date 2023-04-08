@@ -4,7 +4,6 @@ import 'package:bonbon_new/controllers/cart_controller.dart';
 import 'package:bonbon_new/controllers/helpers/global_helpers.dart';
 import 'package:bonbon_new/theme.dart';
 import 'package:bonbon_new/ui/component/primray_button.dart';
-import 'package:expandable/expandable.dart';
 
 import 'package:flutter/material.dart';
 
@@ -46,54 +45,230 @@ class CartItem extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       var listItem =
                           cartController.cartItemModels.value?.items![index];
-
                       return Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.w, vertical: 16.h),
                         child: ListTile(
-                            title: Text(
-                              "${listItem?.item?.fullName}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 12.sp,
-                                  fontFamily: BaseTheme.font_family_sf),
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ExpandablePanel(
-                                header: Text("Details"),
-                                collapsed: Text(
-                                  "",
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                expanded: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.person,
-                                        ),
-                                        Text(
-                                            "${listItem?.members?[0].user?.name}")
-                                      ],
+                          title: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${listItem?.item?.fullName}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12.sp,
+                                        fontFamily: BaseTheme.font_family_sf),
+                                  ),
+                                  Text(
+                                    "${GlobalHelper.currency} ${GlobalHelper.formatNumber(listItem!.item!.price.toString())}",
+                                    style: TextStyle(
+                                      fontFamily: BaseTheme.font_family_sf,
+                                      fontWeight: FontWeight.w400,
+                                      color: BaseTheme.color_grey_9,
+                                      fontSize: 12.sp,
                                     ),
-                                    listItem!.modifiers!.isNotEmpty
-                                        ? Row(
-                                            children: [
-                                              Icon(
-                                                Icons.note_add,
-                                              ),
-                                              Text(
-                                                  "${listItem.modifiers?[0].master?.name}")
-                                            ],
-                                          )
-                                        : SizedBox.shrink()
+                                  )
+                                ],
+                              ),
+                              Container(
+                                height: 24.h,
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        // sessionPickFoodcontroller.decrement();
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFFFEE00),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(5),
+                                            bottomLeft: Radius.circular(5),
+                                          ),
+                                        ),
+                                        width: 32,
+                                        height: 32,
+                                        child: Icon(
+                                          Icons.remove,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Color(0xFFFFEE00).withOpacity(0.3),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 12.w, vertical: 4.h),
+                                      width: 31.w,
+                                      height: 24.h,
+                                      child: Text(
+                                        "1",
+                                        style: TextStyle(
+                                          color: BaseTheme.color_grey_8,
+                                          fontFamily: BaseTheme.font_family_sf,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        // sessionPickFoodcontroller.increment();
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFFFFEE00),
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(5),
+                                            bottomRight: Radius.circular(5),
+                                          ),
+                                        ),
+                                        width: 32,
+                                        height: 32,
+                                        child: Icon(
+                                          Icons.add,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),
-                            ),
-                            trailing:
-                                Icon(Icons.keyboard_arrow_right_outlined)),
+                            ],
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ExpansionTile(
+                                tilePadding: EdgeInsets.all(0),
+                                trailing: SizedBox(
+                                  width: 90.w,
+                                  height: 20.h,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.delete,
+                                        size: 16,
+                                        color: Colors.red,
+                                      ),
+                                      Text(
+                                        "Remove",
+                                        style: TextStyle(
+                                          color: BaseTheme.color_grey_8,
+                                          fontFamily: BaseTheme.font_family_sf,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12.sp,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                title: Container(
+                                  height: 40,
+                                  width: 100,
+                                  padding: EdgeInsets.all(0),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFFAFAFA),
+                                    borderRadius: BorderRadius.circular(40),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Details",
+                                        style: TextStyle(
+                                          fontFamily: BaseTheme.font_family_sf,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.keyboard_arrow_down_outlined,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: BaseTheme.color_grey_2),
+                                    height: 106.h,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(Icons.person),
+                                            SizedBox(
+                                              width: 4.w,
+                                            ),
+                                            for (var person
+                                                in listItem.members!)
+                                              Text(
+                                                "${person.user?.name},",
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      BaseTheme.font_family_sf,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12.sp,
+                                                ),
+                                              )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 16.h,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Icon(Icons.description),
+                                            SizedBox(
+                                              width: 4.w,
+                                            ),
+                                            Text(
+                                              listItem.notes ?? "",
+                                              style: TextStyle(
+                                                fontFamily:
+                                                    BaseTheme.font_family_sf,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 12.sp,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 16.h,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Icon(Icons.description),
+                                            SizedBox(
+                                              width: 4.w,
+                                            ),
+                                            for (var modif
+                                                in listItem.modifiers!)
+                                              Text(
+                                                "${modif.master?.name}",
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      BaseTheme.font_family_sf,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12.sp,
+                                                ),
+                                              )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     },
                   )

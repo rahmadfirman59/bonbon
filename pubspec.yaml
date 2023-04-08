@@ -39,7 +39,7 @@ dependencies:
   get_storage: ^2.0.3
   flutter_svg: 1.1.5
   flutter_screenutil: ^5.6.1
-  pinput: 2.2.12
+  pinput: 2.2.31
   line_icons: ^2.0.0
   qr_code_scanner: 1.0.1
   expandable: ^5.0.1
@@ -57,6 +57,11 @@ dependencies:
   badges: ^3.0.2
   flutter_share: ^2.0.0
   scrollable_positioned_list: ^0.3.5
+  flutter_inappwebview: ^5.7.2+3
+  url_launcher: ^6.1.10
+  xendit: ^0.0.7
+  
+  
   
   
 
@@ -120,6 +125,7 @@ flutter:
     - assets/login/
     - assets/food/
     - assets/banner/
+    - assets/order/
     - assets/restaurant/
     - assets/categories/
     - assets/menu/
@@ -128,6 +134,8 @@ flutter:
     - assets/banner_detail/
     - assets/outlets/
     - assets/json/
+    - assets/payment/
+    - assets/bank/
   
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

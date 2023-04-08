@@ -85,9 +85,6 @@ class SessionCategories extends StatelessWidget {
             SizedBox(
               width: 8.w,
             ),
-            // for (var item
-            //     in inSessionController.menuLiteModels.value.categories!)
-            //   Text("data")
             Flexible(
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,

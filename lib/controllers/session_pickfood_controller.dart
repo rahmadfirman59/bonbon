@@ -31,8 +31,6 @@ class SessionPickFoodController extends GetxController {
     // TODO: implement onReady
     super.onReady();
     pushDataFalse();
-    print("Session Member ${sessionMember.toString()}");
-    print("Session Member ${checkedMember.toString()}");
   }
 
   void pushDataFalse() async {
@@ -57,8 +55,6 @@ class SessionPickFoodController extends GetxController {
   }
 
   void changeCheckedMember(bool? value, int index) {
-    print("Index ${index}");
-
     // checkedMember[index] = value!;
     update();
   }

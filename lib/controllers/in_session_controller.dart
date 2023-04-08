@@ -50,11 +50,11 @@ class InSessionController extends GetxController {
 
   Future<void> fetchingMeIncludeItems(String token) async {
     timer = Timer.periodic(Duration(milliseconds: 10000), (Timer t) {
-      timerDispose();
+      // timerDispose();
       // fetchingMeIncludeItems(token);
-      // getMenuLite(meIncludeItemModels.value.outlet?.id);
-      // getCartItem();
-      // getSessionSummary();
+      getMenuLite(meIncludeItemModels.value.outlet?.id);
+      getCartItem();
+      getSessionSummary();
     });
     // var responseMeWithItem = await RestServices.fetchMeIncludeItem(token);
     // meIncludeItemModels.value = responseMeWithItem!;

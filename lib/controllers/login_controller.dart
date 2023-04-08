@@ -47,16 +47,6 @@ class LoginController extends GetxController {
       "phone": phoneNumber ?? "",
     };
 
-    // var response = await RestServices.loginOtp(body);
-
-    // if (response == true) {
-    //   EasyLoading.dismiss();
-    //   EasyLoading.showSuccess("OTP Send");
-    //   Get.toNamed(RouteName.otp, parameters: body);
-    // } else {
-    //   EasyLoading.dismiss();
-    //   EasyLoading.showError("Error " + response.toString());
-    // }
     await BaseResponse<bool>()
         .postData(
       path: ApiEndpoint.REQUEST_OTP,
